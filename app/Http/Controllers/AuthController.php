@@ -87,11 +87,12 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect('/')->with('success', 'Account created successfully.');
+        return redirect()->route('dashboard')->with('success', 'Account created successfully.');
     }
 
     public function showLogin()
     {
+        // dd(Auth::user()->name);
         return view('login');
     }
 
@@ -116,7 +117,7 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
-        return redirect('/')->with('success', 'Welcome back to Sahayika.');
+        return redirect()->route('dashboard')->with('success', 'Welcome back to Sahayika.');
     }
 
     public function logout(Request $request)

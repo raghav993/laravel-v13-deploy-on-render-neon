@@ -1,0 +1,19 @@
+@extends('layouts.dashboard')
+@section('heading','Welcome back, '.auth()->user()->name.' 👋')
+@section('content')
+<div class="row g-3 mb-4">
+@php($stats=[['Bookings',$bookings->count(),'bi-calendar-check'],['Saved Helpers',$favorites->count(),'bi-heart'],['Pending Requests',$bookings->where('status','pending')->count(),'bi-hourglass-split'],['Completed',$bookings->where('status','completed')->count(),'bi-check2-circle']])
+@foreach($stats as $s)<div class="col-6 col-xl-3"><div class="card stat p-3 bg-white h-100"><i class="bi {{ $s[2] }} fs-4 text-brand"></i><div class="text-muted small mt-2">{{ $s[0] }}</div><div class="fs-3 fw-bold">{{ $s[1] }}</div></div></div>@endforeach
+</div>
+<div class="card p-4 mb-4 bg-white">
+<div class="d-flex justify-content-between align-items-center mb-3"><div><h5 class="mb-1">Find trusted help</h5><p class="text-muted small mb-0">Browse helpers for cleaning, cooking, child care and elder care.</p></div><a class="btn btn-warning" href="{{ route('helpers.index') }}"><i class="bi bi-search me-1"></i>Find Helpers</a></div>
+<div class="row g-3">@foreach($recommended as $h)<div class="col-md-6 col-xl-4"><div class="border rounded-4 p-3 h-100">
+<div class="d-flex align-items-center gap-3"><div class="rounded-circle bg-brand text-white d-flex align-items-center justify-content-center" style="width:52px;height:52px">{{ collect(explode(' ',$h->user->name))->map(fn($x)=>mb_substr($x,0,1))->take(2)->implode('') }}</div><div><b>{{ $h->user->name }}</b><div class="small text-muted"><i class="bi bi-geo-alt"></i> {{ $h->locality?->name }}</div></div></div>
+<div class="small mt-3">{{ $h->experience_years }} yrs experience · {{ $h->work_type==='full_time'?'Full-time':'Part-time' }}</div><div class="d-flex flex-wrap gap-1 mt-2">@foreach($h->services->take(3) as $s)<span class="badge text-bg-light">{{ $s->name_hi ?: $s->name }}</span>@endforeach</div>
+<div class="d-flex gap-2 mt-3"><a class="btn btn-sm btn-outline-secondary" href="{{ route('helpers.show',$h) }}">View</a><form method="POST" action="{{ route('dashboard.helper.favorite',$h) }}">@csrf<button class="btn btn-sm btn-outline-danger"><i class="bi bi-heart"></i></button></form></div>
+</div></div>@endforeach</div></div>
+<div class="card bg-white p-4" id="bookings"><h5>Recent bookings</h5><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Helper</th><th>Service</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody>
+@forelse($bookings as $b)<tr><td>{{ $b->helper->user->name }}</td><td>{{ $b->service?->name }}</td><td>{{ $b->booking_date?->format('d M Y') ?: 'Flexible' }}</td><td><span class="badge text-bg-{{ $b->status==='completed'?'success':($b->status==='rejected'?'danger':'warning') }}">{{ ucfirst($b->status) }}</span></td><td><button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#remark{{ $b->helper_profile_id }}">Remark</button></td></tr>
+<div class="modal fade" id="remark{{ $b->helper_profile_id }}"><div class="modal-dialog"><form class="modal-content" method="POST" action="{{ route('dashboard.helper.remark',$b->helper) }}">@csrf<input type="hidden" name="booking_id" value="{{ $b->id }}"><div class="modal-header"><h5>Add remark</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><label class="form-label">Rating</label><select name="rating" class="form-select mb-3"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select><label class="form-label">Your experience</label><textarea name="remark" class="form-control" rows="4" required placeholder="Share a useful remark for this helper"></textarea></div><div class="modal-footer"><button class="btn btn-primary">Save Remark</button></div></form></div></div>
+@empty<tr><td colspan="5" class="text-center text-muted py-4">No bookings yet.</td></tr>@endforelse</tbody></table></div></div>
+@endsection

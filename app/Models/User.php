@@ -29,4 +29,8 @@ class User extends Authenticatable
     public function isHelper(): bool { return $this->role === 'helper'; }
     public function isCustomer(): bool { return $this->role === 'customer'; }
     public function isAdmin(): bool { return $this->role === 'admin'; }
+    public function bookings(){ return $this->hasMany(Booking::class,'customer_id'); }
+    public function favorites(){ return $this->hasMany(Favorite::class,'customer_id'); }
+    public function testimonials(){ return $this->hasMany(Testimonial::class); }
+    public function remarks(){ return $this->hasMany(HelperRemark::class,'customer_id'); }
 }

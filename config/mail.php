@@ -34,6 +34,7 @@ return [
     |            "failover", "roundrobin"
     |
     */
+    'admin_address' => env('MAIL_ADMIN_ADDRESS'),
 
     'mailers' => [
 

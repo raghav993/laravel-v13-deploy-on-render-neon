@@ -1,2 +1,100 @@
-<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{ $title ?? 'Sahayika' }}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"><style>:root{--ink:#16302E;--paper:#FBF5EA;--marigold:#E8A33D;--maroon:#A63446;--teal:#2F6E68;--card:#FFFDF8;--line:rgba(22,48,46,.12)}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,sans-serif}a{color:inherit;text-decoration:none}.wrap{max-width:1120px;margin:auto;padding:0 24px}h1,h2,h3{font-family:Fraunces,serif}.nav{border-bottom:1px solid var(--line);background:rgba(251,245,234,.94);padding:18px 0}.navin{display:flex;align-items:center;justify-content:space-between}.brand{font-family:Fraunces;font-size:27px;font-weight:700;display:flex;gap:9px;align-items:center}.stamp{width:32px;height:32px;border-radius:50%;background:var(--marigold);display:grid;place-items:center;font-weight:800}.links{display:flex;gap:24px;align-items:center}.links a:hover{color:var(--maroon)}.btn{display:inline-block;padding:11px 17px;border-radius:8px;background:var(--ink);color:white;font-weight:600}.hero{padding:72px 0 42px}.eyebrow{font:600 .72rem 'Space Grotesk';letter-spacing:.14em;text-transform:uppercase;color:var(--maroon)}h1{font-size:clamp(42px,7vw,72px);line-height:.98;margin:12px 0 18px}.lead{font-size:18px;line-height:1.75;max-width:700px;color:#46605d}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px;margin:20px 0;box-shadow:0 8px 30px rgba(22,48,46,.05)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.item{padding:20px;border:1px solid var(--line);border-radius:12px;background:#fff}.item h3{margin:0 0 8px;font-size:22px}.item p{line-height:1.7;color:#526865}.contact{display:grid;grid-template-columns:1fr 1fr;gap:20px}.label{font-size:13px;color:#60736f;font-weight:600}.value{font-size:18px;margin-top:6px}.footer{margin-top:70px;background:var(--ink);color:#f7f1e7;padding:48px 0}.footgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footgrid a{display:block;color:#ddd8cf;margin:9px 0}.footgrid a:hover{color:var(--marigold)}.bottom{border-top:1px solid rgba(255,255,255,.15);margin-top:30px;padding-top:20px;color:#c9c5bd;font-size:13px}@media(max-width:700px){.links{display:none}.grid,.contact,.footgrid{grid-template-columns:1fr}.hero{padding-top:45px}}
-</style></head><body><header class="nav"><div class="wrap navin"><a class="brand" href="{{ route('home') }}"><span class="stamp">✓</span>Sahayika</a><nav class="links"><a href="{{ route('home') }}">होम</a><a href="{{ route('helpers.index') }}">सहायिका खोजें</a><a href="{{ route('careers') }}">Careers</a><a href="{{ route('contact') }}">संपर्क करें</a><a href="{{ route('help') }}">Help Center</a><a class="btn" href="{{ route('register') }}">रजिस्टर करें</a></nav></div></header><main>@yield('content')</main><footer class="footer"><div class="wrap"><div class="footgrid"><div><div class="brand">Sahayika</div><p style="line-height:1.7;color:#d5d1c8">अपने शहर में घर के काम, बच्चों और बुज़ुर्गों की देखभाल के लिए सहायिका खोजें — प्रोफाइल देखें, सीधे जुड़ें।</p></div><div><strong>कंपनी</strong><a href="{{ route('careers') }}">Careers</a><a href="{{ route('contact') }}">संपर्क करें</a></div><div><strong>मदद</strong><a href="{{ route('help') }}">Help Center</a><a href="{{ route('privacy') }}">Privacy Policy</a></div></div><div class="bottom">© 2026 Sahayika Technologies Pvt. Ltd. · हर घर के लिए, भरोसेमंद मदद।</div></div></footer></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $siteSettings['site_name']->value ?? 'Sahayika' }} — {{ $siteSettings['tagline']->value ?? 'भरोसेमंद घरेलू मदद' }}</title>
+    <meta name="description" content="अपने शहर में घर के काम, बर्तन-झाड़ू, खाना बनाने, कपड़े धोने, बेबी केयर और बुज़ुर्गों की देखभाल के लिए सहायिका खोजें। प्रोफाइल देखें, अनुभव जानें और सीधे संपर्क करें — Sahayika पर।">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+    <header id="siteHeader">
+        <div class="wrap nav">
+            <a href="/" class="brand">
+                <img src="{{ isset($siteSettings['logo']) ? asset('storage/'.$siteSettings['logo']->value) : asset('assets/img/sahayika.png') }}" alt="Sahayika" width="170px">
+            </a>
+            <nav class="nav-links">
+                <a href="/#services">सेवाएं</a>
+                <a href="/#how">कैसे काम करता है</a>
+                <a href="/#why">क्यों Sahayika</a>
+                <a href="/#become">सहायिका बनें</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="login" class="btn btn-ghost">लॉग इन</a>
+                <a href="register" class="btn btn-primary">रजिस्टर करें</a>
+            </div>
+            <button class="menu-btn" onclick="document.getElementById('siteHeader').classList.toggle('open')" aria-label="Toggle menu">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M3 12h18M3 18h18" stroke="#16302E" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+        <div class="mobile-panel">
+            <a href="/#services">सेवाएं</a>
+            <a href="/#how">कैसे काम करता है</a>
+            <a href="/#why">क्यों Sahayika</a>
+            <a href="/#become">सहायिका बनें</a>
+            <a href="/login" class="btn btn-ghost">लॉग इन</a>
+            <a href="/register" class="btn btn-primary">रजिस्टर करें</a>
+        </div>
+    </header>
+    @if(session('success'))<div class="alert alert-success alert-dismissible fade show"><i class="bi bi-check-circle me-2"></i>{{ session('success') }}<button class="btn-close" data-bs-dismiss="alert"></button></div>@endif
+    <main>@yield('content')</main>
+    <footer>
+        <div class="wrap">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="brand">
+                        <img src="{{ isset($siteSettings['logo']) ? asset('storage/'.$siteSettings['logo']->value) : asset('assets/img/light-logo.png') }}" alt="Sahayika" width="170px">
+                    </a>
+                    <p>अपने शहर में घर के काम, बच्चों और बुज़ुर्गों की देखभाल के लिए सहायिका खोजें — प्रोफाइल देखें, सीधे जुड़ें।</p>
+                    <div class="socials">
+                        <a href="/#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="3" width="18" height="18" rx="5" stroke="#FBF5EA" stroke-width="1.6" />
+                                <circle cx="12" cy="12" r="4" stroke="#FBF5EA" stroke-width="1.6" />
+                            </svg></a>
+                        <a href="/#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M14 8H16V5H14C12 5 10.5 6.5 10.5 8.5V10H8.5V13H10.5V20H13.5V13H15.5L16 10H13.5V8.7C13.5 8.3 13.7 8 14 8Z" fill="#FBF5EA" />
+                            </svg></a>
+                        <a href="/#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 4 L20 20 M20 4 L4 20" stroke="#FBF5EA" stroke-width="0" />
+                                <path d="M21 5 C20.3 5.3 19.5 5.6 18.7 5.7 C19.6 5.1 20.2 4.3 20.5 3.3 C19.7 3.8 18.8 4.1 17.9 4.3 C17.1 3.5 16 3 14.8 3 C12.4 3 10.6 5.2 11.1 7.5 C7.7 7.3 4.7 5.7 2.7 3.1 C1.8 4.6 2.3 6.5 3.7 7.5 C3.1 7.5 2.5 7.3 2 7 C2 8.6 3.1 10 4.7 10.4 C4.2 10.5 3.6 10.6 3.1 10.4 C3.5 11.8 4.8 12.8 6.3 12.8 C5 13.8 3.4 14.3 1.7 14.2 C3.3 15.2 5.1 15.8 7 15.8 C14.8 15.8 18.7 9.4 18.5 5.6 C19.3 5.1 20 4.4 21 5 Z" fill="#FBF5EA" />
+                            </svg></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <span class="label">सेवाएं</span>
+                    <a href="/#services">घर की सफाई</a>
+                    <a href="/#services">खाना बनाने वाली</a>
+                    <a href="/#services">बच्चों की देखभाल</a>
+                    <a href="/#services">बुज़ुर्गों की देखभाल</a>
+                </div>
+                <div class="footer-col">
+                    <span class="label">कंपनी</span>
+                    <a href="/#how">कैसे काम करता है</a>
+                    <a href="/#become">सहायिका बनें</a>
+                    <a href="/careers">Careers</a>
+                    <a href="/contact">संपर्क करें</a>
+                </div>
+                <div class="footer-col">
+                    <span class="label">अकाउंट</span>
+                    <a href="/login">लॉग इन</a>
+                    <a href="/register">रजिस्टर करें</a>
+                    <a href="/help">Help Center</a>
+                    <a href="/privacy">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="bottom">© 2026 Sahayika | साहायिका. · हर घर के लिए, भरोसेमंद मदद।</div>
+        </div>
+    </footer>
+</body>
+
+</html>

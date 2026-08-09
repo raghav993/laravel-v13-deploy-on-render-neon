@@ -1,44 +1,52 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — Sahayika</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--ink:#16302E;--paper:#FBF5EA;--gold:#E8A33D;--teal:#2F6E68;--card:#FFFDF8;--line:rgba(22,48,46,.13);--red:#A63446}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,sans-serif}.page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}.aside{background:linear-gradient(160deg,#16302E,#0e2523);color:#fff8ee;padding:52px;display:flex;flex-direction:column;justify-content:space-between}.brand{font:700 1.5rem Fraunces,serif}.aside h1{font:600 clamp(2.2rem,4vw,3.5rem) Fraunces,serif;line-height:1.08}.aside em{color:var(--gold)}.aside p{color:#fff8eeb8;line-height:1.7;max-width:430px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:8px 12px;border:1px solid #ffffff24;border-radius:100px;background:#ffffff0a;font-size:.82rem}.main{display:flex;align-items:center;justify-content:center;padding:30px}.card{width:100%;max-width:420px}.top{display:flex;justify-content:space-between;margin-bottom:30px}.top a{font-size:.9rem;color:#647572}.h{font:600 2.2rem Fraunces,serif;margin:0 0 7px}.sub{color:#687975;margin:0 0 25px}.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:22px}.role{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:10px 5px;font-size:.78rem;font-weight:700;color:var(--ink);cursor:pointer}.role.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}.field{margin-bottom:15px}.field label{display:block;font-size:.83rem;font-weight:700;margin-bottom:7px}.field input{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:11px;background:var(--card);font:inherit;outline:none}.field input:focus{border-color:var(--teal)}.row{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:#667571;margin:8px 0 20px}.row label{display:flex;gap:7px;align-items:center}.btn{width:100%;padding:14px;border:0;border-radius:100px;background:var(--gold);font-weight:800;color:var(--ink);cursor:pointer}.errors{background:#fff0f0;border:1px solid #e6b8b8;color:#8a2938;border-radius:12px;padding:12px 15px;margin-bottom:18px;font-size:.86rem}.demo{margin-top:22px;padding:14px;border:1px dashed var(--line);border-radius:12px;background:#ffffff70;font-size:.78rem;line-height:1.6;color:#5e6d6a}.demo b{color:var(--ink)}@media(max-width:800px){.page{grid-template-columns:1fr}.aside{display:none}}
-</style>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Sahayika</title>
+  <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>body{font-family:Inter,sans-serif;background:#fbf5ea}.serif{font-family:Fraunces,serif}</style>
 </head>
 <body>
-<div class="page">
-<aside class="aside">
-<a class="brand" href="{{ route('home') }}">Sahayika</a>
-<div><div style="color:#E8A33D;font-size:.78rem;font-weight:700;letter-spacing:.12em">घर की मदद • INDORE</div><h1>फिर से मिलिए <em>अपनी Sahayika</em> से।</h1><p>Customer के लिए घर के काम की मदद खोजें। Helper के लिए अपना profile, services और availability manage करने की शुरुआत करें।</p><div class="chips"><span class="chip">झाड़ू-पोंछा</span><span class="chip">बर्तन</span><span class="chip">खाना</span><span class="chip">Baby Care</span><span class="chip">Elder Care</span><span class="chip">All-rounder</span></div></div>
-<small style="color:#fff8ee80">Demo development app • Sahayika</small>
-</aside>
-<main class="main"><div class="card">
-<div class="top"><a href="{{ route('home') }}">← Sahayika</a><a href="{{ route('register') }}">Create account</a></div>
-<h1 class="h">Welcome back</h1><p class="sub">अपना account type चुनें और login करें।</p>
-@if($errors->any())<div class="errors"><ul style="margin:0 0 0 18px">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
-<form method="POST" action="{{ route('login.store') }}">
-@csrf
-<div class="roles">
-<button type="button" class="role {{ old('role','customer')==='customer'?'active':'' }}" onclick="setRole('customer',this)">🏠 Customer</button>
-<button type="button" class="role {{ old('role')==='helper'?'active':'' }}" onclick="setRole('helper',this)">🤝 Helper</button>
-<button type="button" class="role {{ old('role')==='admin'?'active':'' }}" onclick="setRole('admin',this)">⚙️ Admin</button>
-</div>
-<input type="hidden" name="role" id="role" value="{{ old('role','customer') }}">
-<div class="field"><label for="identifier">Email या mobile number</label><input id="identifier" name="identifier" value="{{ old('identifier') }}" placeholder="demo.customer01@sahayika.test" required></div>
-<div class="field"><label for="password">Password</label><input id="password" type="password" name="password" placeholder="Your password" required></div>
-<div class="row"><label><input type="checkbox" name="remember" value="1"> Remember me</label><span>Secure session</span></div>
-<button class="btn" type="submit">Login करें</button>
-</form>
-<div class="demo"><b>Demo accounts</b><br>Admin: admin@sahayika.test / Demo@12345<br>Customer: demo.customer01@sahayika.test / Demo@12345<br>Helper: demo.helper01@sahayika.test / Demo@12345</div>
-</div></main>
+<div class="min-vh-100 d-flex align-items-center">
+  <div class="container py-4">
+    <div class="row g-0 justify-content-center shadow-lg rounded-4 overflow-hidden">
+      <div class="col-lg-5 d-none d-lg-flex text-white p-5 flex-column justify-content-between" style="background:linear-gradient(150deg,#16302e,#2f6e68)">
+        <div><a href="{{ route('home') }}"><img src="{{ asset('assets/img/light-logo.png') }}" alt="Sahayika" width="160"></a>
+          <span class="badge rounded-pill bg-warning text-dark mt-5 mb-3">घर की मदद • INDORE</span>
+          <h1 class="serif display-5 fw-bold">फिर से मिलिए <span class="text-warning">अपनी Sahayika</span> से।</h1>
+          <p class="text-white-50 fs-6">घर के काम, खाना, baby care या elder care के लिए मदद खोजें और अपने area में available profiles देखें।</p>
+          <div class="d-flex flex-wrap gap-2"><span class="badge rounded-pill bg-white bg-opacity-10 border p-2">झाड़ू-पोंछा</span><span class="badge rounded-pill bg-white bg-opacity-10 border p-2">बर्तन</span><span class="badge rounded-pill bg-white bg-opacity-10 border p-2">खाना</span><span class="badge rounded-pill bg-white bg-opacity-10 border p-2">Elder Care</span></div>
+        </div>
+        <div class="rounded-4 overflow-hidden mt-4"><img src="{{ asset('assets/img/testimonials/1.png') }}" class="w-100" style="height:190px;object-fit:cover;" alt="Sahayika home support"></div>
+      </div>
+      <div class="col-lg-7 bg-white p-4 p-md-5">
+        <div class="d-flex justify-content-between mb-4"><a class="text-decoration-none text-secondary" href="{{ route('home') }}"><i class="bi bi-arrow-left"></i> Sahayika</a><a href="{{ route('register') }}" class="text-decoration-none fw-semibold">Create account</a></div>
+        <div class="mb-4"><span class="badge bg-success-subtle text-success-emphasis rounded-pill mb-2"><i class="bi bi-person-check me-1"></i> Welcome back</span><h2 class="serif fw-bold mb-1">अपने account में login करें</h2><p class="text-secondary mb-0">Account type चुनें और आगे बढ़ें।</p></div>
+        @if($errors->any())
+        <div class="alert alert-danger border-0"><i class="bi bi-exclamation-circle me-2"></i><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
+        @endif
+        <form method="POST" action="{{ route('login.store') }}">
+          @csrf
+          <div class="row g-2 mb-3">
+            <div class="col-md-4"><button type="button" class="role btn btn-outline-secondary w-100 text-start p-3 {{ old('role','customer')==='customer'?'active border-success bg-success-subtle':'' }}" onclick="setRole('customer',this)"><i class="bi bi-house-heart me-1"></i> Customer</button></div>
+            <div class="col-md-4"><button type="button" class="role btn btn-outline-secondary w-100 text-start p-3 {{ old('role')==='helper'?'active border-success bg-success-subtle':'' }}" onclick="setRole('helper',this)"><i class="bi bi-person-heart me-1"></i> Helper</button></div>
+            <div class="col-md-4"><button type="button" class="role btn btn-outline-secondary w-100 text-start p-3 {{ old('role')==='admin'?'active border-success bg-success-subtle':'' }}" onclick="setRole('admin',this)"><i class="bi bi-gear me-1"></i> Admin</button></div>
+          </div>
+          <input type="hidden" name="role" id="role" value="{{ old('role','customer') }}">
+          <div class="mb-3"><label for="identifier" class="form-label fw-semibold">Email या mobile number</label><div class="input-group"><span class="input-group-text"><i class="bi bi-person"></i></span><input class="form-control" id="identifier" name="identifier" value="{{ old('identifier') }}" placeholder="demo.customer01@sahayika.test" required></div></div>
+          <div class="mb-3"><label for="password" class="form-label fw-semibold">Password</label><div class="input-group"><span class="input-group-text"><i class="bi bi-lock"></i></span><input class="form-control" id="password" type="password" name="password" placeholder="Your password" required></div></div>
+          <div class="d-flex justify-content-between align-items-center small text-secondary mb-4"><label class="form-check"><input class="form-check-input" type="checkbox" name="remember" value="1"><span class="form-check-label">Remember me</span></label><span><i class="bi bi-shield-check text-success"></i> Secure session</span></div>
+          <button class="btn btn-dark w-100 rounded-pill py-3 fw-bold" type="submit"><i class="bi bi-box-arrow-in-right me-2"></i>Login करें</button>
+        </form>
+        <div class="alert alert-light border mt-4 small"><strong><i class="bi bi-info-circle me-1"></i> Demo accounts</strong><br>Admin: admin@sahayika.test / Demo@12345<br>Customer: demo.customer01@sahayika.test / Demo@12345<br>Helper: demo.helper01@sahayika.test / Demo@12345</div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
-function setRole(role,button){document.getElementById('role').value=role;document.querySelectorAll('.role').forEach(x=>x.classList.remove('active'));button.classList.add('active')}
+function setRole(role,button){document.getElementById('role').value=role;document.querySelectorAll('.role').forEach(x=>x.classList.remove('active','border-success','bg-success-subtle'));button.classList.add('active','border-success','bg-success-subtle')}
 </script>
-</body>
-</html>
+</body></html>

@@ -1,12 +1,343 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $helperProfile->user->name }} — Sahayika Profile</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Indore में घरेलू काम, खाना, Baby Care और Elder Care के लिए सहायिका खोजें।">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-    :root{--ink:#16302E;--paper:#FBF5EA;--gold:#E8A33D;--maroon:#A63446;--teal:#2F6E68;--card:#FFFDF8;--line:rgba(22,48,46,.12)}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,sans-serif}.wrap{max-width:1000px;margin:auto;padding:0 22px}a{text-decoration:none;color:inherit}header{border-bottom:1px solid var(--line);background:rgba(251,245,234,.95);position:sticky;top:0;z-index:10}.nav{height:74px;display:flex;align-items:center;justify-content:space-between}.brand{font:700 1.4rem Fraunces,serif}.back{font-weight:600;color:var(--maroon);font-size:.88rem}.page{padding:38px 0 80px}.profile{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:0 20px 60px -40px rgba(22,48,46,.4)}.cover{height:145px;background:linear-gradient(125deg,var(--teal),var(--ink));position:relative}.avatar{position:absolute;left:35px;bottom:-45px;width:100px;height:100px;border-radius:28px;border:6px solid var(--card);background:var(--gold);display:grid;place-items:center;font:700 2rem Fraunces,serif;color:var(--ink)}.body{padding:65px 35px 35px}.head{display:flex;justify-content:space-between;gap:20px;align-items:start}.name{font:700 clamp(2rem,4vw,2.7rem) Fraunces,serif;margin:0 0 7px}.place{color:rgba(22,48,46,.62)}.badge{display:inline-flex;padding:7px 11px;border-radius:99px;background:#e9f5ee;color:#276447;font-size:.72rem;font-weight:700}.grid{display:grid;grid-template-columns:1.3fr .7fr;gap:20px;margin-top:30px}.box{border:1px solid var(--line);border-radius:19px;padding:22px;background:#fffaf1}.box h2{font:700 1.25rem Fraunces,serif;margin:0 0 16px}.bio{color:rgba(22,48,46,.7);line-height:1.7;margin:0}.services{display:flex;flex-wrap:wrap;gap:8px}.service{padding:8px 11px;border-radius:99px;background:#eef4f0;font-size:.8rem}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.stat{padding:13px;background:var(--card);border-radius:13px;border:1px solid var(--line)}.stat small{display:block;color:rgba(22,48,46,.52);font-size:.68rem;margin-bottom:3px}.stat strong{font-size:.9rem}.salary{font:700 1.7rem Fraunces,serif}.salary small{font:400 .78rem Inter;color:rgba(22,48,46,.55)}.days{display:grid;gap:7px}.day{display:flex;justify-content:space-between;font-size:.8rem;padding-bottom:7px;border-bottom:1px solid var(--line)}.cta{display:flex;gap:10px;margin-top:25px}.btn{padding:13px 20px;border-radius:99px;background:var(--gold);font-weight:700}.btn.secondary{background:var(--ink);color:white}@media(max-width:750px){.grid{grid-template-columns:1fr}.head{flex-direction:column}.body{padding:62px 20px 25px}.cover{height:120px}.avatar{left:20px}}
+        :root {
+            --ink: #16302E;
+            --paper: #FBF5EA;
+            --gold: #E8A33D;
+            --maroon: #A63446;
+            --teal: #2F6E68;
+            --card: #FFFDF8;
+            --line: rgba(22, 48, 46, .12)
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: Inter, sans-serif
+        }
+
+        .wrap {
+            max-width: 1000px;
+            margin: auto;
+            padding: 0 22px
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        header {
+            border-bottom: 1px solid var(--line);
+            background: rgba(251, 245, 234, .95);
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .nav {
+            height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .brand {
+            font: 700 1.4rem Fraunces, serif
+        }
+
+        .back {
+            font-weight: 600;
+            color: var(--maroon);
+            font-size: .88rem
+        }
+
+        .page {
+            padding: 38px 0 80px
+        }
+
+        .profile {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px -40px rgba(22, 48, 46, .4)
+        }
+
+        .cover {
+            height: 145px;
+            background: linear-gradient(125deg, var(--teal), var(--ink));
+            position: relative
+        }
+
+        .avatar {
+            position: absolute;
+            left: 35px;
+            bottom: -45px;
+            width: 100px;
+            height: 100px;
+            border-radius: 28px;
+            border: 6px solid var(--card);
+            background: var(--gold);
+            display: grid;
+            place-items: center;
+            font: 700 2rem Fraunces, serif;
+            color: var(--ink)
+        }
+
+        .body {
+            padding: 65px 35px 35px
+        }
+
+        .head {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: start
+        }
+
+        .name {
+            font: 700 clamp(2rem, 4vw, 2.7rem) Fraunces, serif;
+            margin: 0 0 7px
+        }
+
+        .place {
+            color: rgba(22, 48, 46, .62)
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 7px 11px;
+            border-radius: 99px;
+            background: #e9f5ee;
+            color: #276447;
+            font-size: .72rem;
+            font-weight: 700
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.3fr .7fr;
+            gap: 20px;
+            margin-top: 30px
+        }
+
+        .box {
+            border: 1px solid var(--line);
+            border-radius: 19px;
+            padding: 22px;
+            background: #fffaf1
+        }
+
+        .box h2 {
+            font: 700 1.25rem Fraunces, serif;
+            margin: 0 0 16px
+        }
+
+        .bio {
+            color: rgba(22, 48, 46, .7);
+            line-height: 1.7;
+            margin: 0
+        }
+
+        .services {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .service {
+            padding: 8px 11px;
+            border-radius: 99px;
+            background: #eef4f0;
+            font-size: .8rem
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px
+        }
+
+        .stat {
+            padding: 13px;
+            background: var(--card);
+            border-radius: 13px;
+            border: 1px solid var(--line)
+        }
+
+        .stat small {
+            display: block;
+            color: rgba(22, 48, 46, .52);
+            font-size: .68rem;
+            margin-bottom: 3px
+        }
+
+        .stat strong {
+            font-size: .9rem
+        }
+
+        .salary {
+            font: 700 1.7rem Fraunces, serif
+        }
+
+        .salary small {
+            font: 400 .78rem Inter;
+            color: rgba(22, 48, 46, .55)
+        }
+
+        .days {
+            display: grid;
+            gap: 7px
+        }
+
+        .day {
+            display: flex;
+            justify-content: space-between;
+            font-size: .8rem;
+            padding-bottom: 7px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .cta {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px
+        }
+
+        .btn {
+            padding: 13px 20px;
+            border-radius: 99px;
+            background: var(--gold);
+            font-weight: 700
+        }
+
+        .btn.secondary {
+            background: var(--ink);
+            color: white
+        }
+
+        @media(max-width:750px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            .head {
+                flex-direction: column
+            }
+
+            .body {
+                padding: 62px 20px 25px
+            }
+
+            .cover {
+                height: 120px
+            }
+
+            .avatar {
+                left: 20px
+            }
+        }
     </style>
 </head>
-<body><header><div class="wrap"><div class="nav"><a class="brand" href="{{ route('home') }}">Sahayika</a><a class="back" href="{{ route('helpers.index') }}">← सहायिका खोजें</a></div></div></header>
-<main class="page"><div class="wrap"><article class="profile"><div class="cover"><div class="avatar">{{ collect(preg_split('/\s+/', trim($helperProfile->user->name)))->map(fn($part)=>mb_substr($part,0,1))->take(2)->implode('') }}</div></div><div class="body"><div class="head"><div><h1 class="name">{{ $helperProfile->user->name }}</h1><div class="place">{{ $helperProfile->locality?->name }}, {{ $helperProfile->locality?->city?->name }}, {{ $helperProfile->locality?->city?->state?->name }}</div></div><span class="badge">{{ $helperProfile->availability_status === 'available' ? 'उपलब्ध' : 'अभी उपलब्ध नहीं' }}</span></div><div class="stats"><div class="stat"><small>अनुभव</small><strong>{{ $helperProfile->experience_years }} साल</strong></div><div class="stat"><small>काम</small><strong>{{ $helperProfile->work_type === 'full_time' ? 'Full-time' : 'Part-time' }}</strong></div><div class="stat"><small>तुरंत उपलब्ध</small><strong>{{ $helperProfile->immediate_availability ? 'हाँ' : 'नहीं' }}</strong></div></div><div class="grid"><div><section class="box"><h2>मेरे बारे में</h2><p class="bio">{{ $helperProfile->bio ?: 'घरेलू और परिवार-सहायता के काम के लिए उपलब्ध demo profile.' }}</p></section><section class="box" style="margin-top:18px"><h2>सेवाएं</h2><div class="services">@foreach($helperProfile->services as $service)<span class="service">{{ $service->name_hi ?: $service->name }}</span>@endforeach</div></section><section class="box" style="margin-top:18px"><h2>उपलब्ध समय</h2><div class="days">@php $days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; @endphp @foreach($helperProfile->availabilities as $slot)<div class="day"><span>{{ $days[$slot->day_of_week] }}</span><strong>{{ \Carbon\Carbon::parse($slot->start_time)->format('g:i A') }} – {{ \Carbon\Carbon::parse($slot->end_time)->format('g:i A') }}</strong></div>@endforeach</div></section></div><aside><div class="box"><h2>अपेक्षित वेतन</h2><div class="salary">₹{{ number_format($helperProfile->expected_salary) }} <small>/ {{ $helperProfile->salary_type === 'monthly' ? 'माह' : $helperProfile->salary_type }}</small></div><div class="muted" style="margin-top:8px;color:rgba(22,48,46,.55);font-size:.75rem">Demo profile value</div></div><div class="box" style="margin-top:18px"><h2>भाषाएं</h2><p class="bio">{{ $helperProfile->languages ?: 'Hindi' }}</p><h2 style="margin-top:22px">इलाका</h2><p class="bio">{{ $helperProfile->locality?->name }}, Indore</p></div><div class="cta"><a class="btn" href="{{ route('login') }}">लॉगिन करके संपर्क करें</a></div></aside></div></div></article></div></main></body></html>
+
+<body>
+    <header>
+        <div class="wrap">
+            <div class="nav"><a class="brand" href="{{ route('home') }}">Sahayika</a><a class="back" href="{{ route('helpers.index') }}">← सहायिका खोजें</a></div>
+        </div>
+    </header>
+    <main class="page">
+        <div class="wrap">
+            <article class="profile">
+                <div class="cover">
+                    <div class="avatar">{{ collect(preg_split('/\s+/', trim($helperProfile->user->name)))->map(fn($part)=>mb_substr($part,0,1))->take(2)->implode('') }}</div>
+                </div>
+                <div class="body">
+                    <div class="head">
+                        <div>
+                            <h1 class="name">{{ $helperProfile->user->name }}</h1>
+                            <div class="place">{{ $helperProfile->locality?->name }}, {{ $helperProfile->locality?->city?->name }}, {{ $helperProfile->locality?->city?->state?->name }}</div>
+                        </div><span class="badge">{{ $helperProfile->availability_status === 'available' ? 'उपलब्ध' : 'अभी उपलब्ध नहीं' }}</span>
+                    </div>
+                    <div class="stats">
+                        <div class="stat"><small>अनुभव</small><strong>{{ $helperProfile->experience_years }} साल</strong></div>
+                        <div class="stat"><small>काम</small><strong>{{ $helperProfile->work_type === 'full_time' ? 'Full-time' : 'Part-time' }}</strong></div>
+                        <div class="stat"><small>तुरंत उपलब्ध</small><strong>{{ $helperProfile->immediate_availability ? 'हाँ' : 'नहीं' }}</strong></div>
+                    </div>
+                    <div class="grid">
+                        <div>
+                            <section class="box">
+                                <h2>मेरे बारे में</h2>
+                                <p class="bio">{{ $helperProfile->bio ?: 'घरेलू और परिवार-सहायता के काम के लिए उपलब्ध demo profile.' }}</p>
+                            </section>
+                            <section class="box" style="margin-top:18px">
+                                <h2>सेवाएं</h2>
+                                <div class="services">@foreach($helperProfile->services as $service)<span class="service">{{ $service->name_hi ?: $service->name }}</span>@endforeach</div>
+                            </section>
+                            <section class="box" style="margin-top:18px">
+                                <h2>उपलब्ध समय</h2>
+                                <div class="days">@php $days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; @endphp @foreach($helperProfile->availabilities as $slot)<div class="day"><span>{{ $days[$slot->day_of_week] }}</span><strong>{{ \Carbon\Carbon::parse($slot->start_time)->format('g:i A') }} – {{ \Carbon\Carbon::parse($slot->end_time)->format('g:i A') }}</strong></div>@endforeach</div>
+                            </section>
+                        </div>
+                        <aside>
+                            <div class="box">
+                                <h2>अपेक्षित वेतन</h2>
+                                <div class="salary">₹{{ number_format($helperProfile->expected_salary) }} <small>/ {{ $helperProfile->salary_type === 'monthly' ? 'माह' : $helperProfile->salary_type }}</small></div>
+                                <div class="muted" style="margin-top:8px;color:rgba(22,48,46,.55);font-size:.75rem">Demo profile value</div>
+                            </div>
+                            <div class="box" style="margin-top:18px">
+                                <h2>भाषाएं</h2>
+                                <p class="bio">{{ $helperProfile->languages ?: 'Hindi' }}</p>
+                                <h2 style="margin-top:22px">इलाका</h2>
+                                <p class="bio">{{ $helperProfile->locality?->name }}, Indore</p>
+                            </div>
+                            <div class="cta">
+@if(auth()->check() && auth()->user()->isCustomer())
+<form method="POST" action="{{ route('dashboard.helper.favorite',$helperProfile) }}">@csrf<button class="btn secondary" type="submit"><i class="bi bi-heart me-1"></i> Save</button></form>
+<button class="btn" data-bs-toggle="modal" data-bs-target="#bookModal">बुकिंग अनुरोध</button>
+@elseif(auth()->check())
+<a class="btn" href="{{ route('dashboard.index') }}">Dashboard</a>
+@else
+<a class="btn" href="{{ route('login') }}">लॉगिन करके संपर्क करें</a>
+@endif
+</div>
+@if(auth()->check() && auth()->user()->isCustomer())
+<div class="modal fade" id="bookModal"><div class="modal-dialog"><form class="modal-content" method="POST" action="{{ route('dashboard.helper.book',$helperProfile) }}">@csrf
+<div class="modal-header"><h5 class="modal-title">Booking request</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+<div class="modal-body">
+<label class="form-label">Service</label><select name="service_id" class="form-select mb-3" required>@foreach($helperProfile->services as $service)<option value="{{ $service->id }}">{{ $service->name_hi ?: $service->name }}</option>@endforeach</select>
+<label class="form-label">Preferred date</label><input type="date" name="booking_date" class="form-control mb-3" min="{{ date('Y-m-d') }}">
+<label class="form-label">Start time</label><input type="time" name="start_time" class="form-control mb-3">
+<label class="form-label">Duration (hours)</label><input type="number" name="duration_hours" class="form-control mb-3" min="1" max="24">
+<label class="form-label">Note for helper</label><textarea name="customer_note" class="form-control" rows="3" placeholder="Tell the helper what you need"></textarea>
+</div><div class="modal-footer"><button class="btn" type="submit">Send request</button></div></form></div></div>
+@endif
+                        </aside>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+</body>
+
+</html>

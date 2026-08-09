@@ -25,4 +25,7 @@ class HelperProfile extends Model
     public function scopeActive($query){ return $query->where('profile_status','active')->where('availability_status','!=','unavailable'); }
     public function scopePartTime($query){ return $query->where('work_type','part_time'); }
     public function scopeFullTime($query){ return $query->where('work_type','full_time'); }
+    public function bookings(){ return $this->hasMany(Booking::class); }
+    public function favorites(){ return $this->hasMany(Favorite::class); }
+    public function remarks(){ return $this->hasMany(HelperRemark::class); }
 }
