@@ -14,11 +14,11 @@
 <div class="container py-4">
 <div class="row g-0 justify-content-center shadow-lg rounded-4 overflow-hidden">
 <div class="col-lg-4 d-none d-lg-flex text-white p-4 flex-column justify-content-between" style="background:linear-gradient(150deg,#16302e,#2f6e68)">
-<div><a href="{{ route('home') }}"><img src="{{ asset('assets/img/light-logo.png') }}" alt="Sahayika" width="150"></a><span class="badge rounded-pill bg-warning text-dark mt-5 mb-3">GET STARTED</span>
+<div><a href="{{ route('home') }}"><img src="{{ asset('assets/img/light-logo.png') }}" alt="Sahayika" width="150"></a><br><span class="mt-2 badge rounded-pill bg-warning text-dark mt-5 mb-3">GET STARTED</span>
 <h1 class="serif display-6 fw-bold">अपने घर के काम के लिए <span class="text-warning">सही मदद</span> ढूंढें।</h1>
 <p class="text-white-50">Customer के लिए helper खोजें या Sahayika के साथ अपनी services और availability का profile बनाएं।</p>
 <div class="vstack gap-2"><div class="bg-white bg-opacity-10 rounded-3 p-3"><i class="bi bi-house-heart me-2"></i><strong>Customer</strong><div class="small text-white-50">अपने area में helpers खोजें</div></div><div class="bg-white bg-opacity-10 rounded-3 p-3"><i class="bi bi-person-heart me-2"></i><strong>Helper</strong><div class="small text-white-50">अपनी services और experience दिखाएं</div></div></div></div>
-<img src="{{ asset('assets/img/testimonials/2.png') }}" class="rounded-4 w-100" style="height:180px;object-fit:cover" alt="Sahayika">
+<img src="{{ asset('assets/img/register-bg.jpeg') }}" class="rounded-4 w-100" style="object-fit:cover" alt="Sahayika">
 </div>
 <div class="col-lg-8 bg-white p-4 p-md-5">
 <div class="d-flex justify-content-between mb-4"><a class="text-decoration-none text-secondary" href="{{ route('home') }}"><i class="bi bi-arrow-left"></i> Sahayika</a><a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Already registered? Login</a></div>
