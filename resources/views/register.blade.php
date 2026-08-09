@@ -1,281 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register — Sahayika</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#16302E; --paper:#FBF5EA; --marigold:#E8A33D; --marigold-deep:#C97F1F;
-    --maroon:#A63446; --teal:#2F6E68; --card:#FFFDF8; --line: rgba(22,48,46,0.12);
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;}
-  h1,h2,h3{font-family:'Fraunces',serif;}
-  .label{font-family:'Space Grotesk',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-weight:600;font-size:.72rem;}
-  a{color:inherit;text-decoration:none;}
-  .stamp svg{display:block;}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:100px;font-weight:600;font-size:.95rem;cursor:pointer;border:1.5px solid transparent;transition:all .2s ease;}
-  .btn-primary{background:var(--marigold);color:var(--ink);}
-  .btn-primary:hover{background:var(--marigold-deep);transform:translateY(-1px);}
-
-  .page{display:grid;grid-template-columns:.92fr 1.08fr;min-height:100vh;}
-
-  /* LEFT PANEL */
-  .panel{
-    background:linear-gradient(165deg,var(--ink) 0%, #0f2422 100%);
-    color:var(--paper);
-    padding:52px 48px;
-    display:flex;flex-direction:column;justify-content:space-between;
-    position:relative;overflow:hidden;
-  }
-  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:700;font-size:1.35rem;position:relative;z-index:1;}
-  .panel-mid{position:relative;z-index:1;}
-  .panel-mid .label{color:var(--marigold);margin-bottom:16px;display:block;}
-  .panel-mid h2{font-size:clamp(1.7rem,2.6vw,2.2rem);line-height:1.18;margin:0 0 18px;font-weight:600;max-width:400px;}
-  .panel-mid h2 em{font-style:italic;color:var(--marigold);}
-  .panel-mid p{color:rgba(251,245,234,.68);font-size:.98rem;line-height:1.6;max-width:380px;margin:0;}
-
-  .benefit-list{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;margin-top:32px;}
-  .benefit{display:flex;gap:14px;align-items:flex-start;}
-  .benefit .stamp{flex-shrink:0;margin-top:2px;}
-  .benefit strong{display:block;font-size:.95rem;}
-  .benefit small{color:rgba(251,245,234,.6);font-size:.82rem;line-height:1.5;}
-
-  .panel-quote{position:relative;z-index:1;background:rgba(251,245,234,.08);border:1px solid rgba(251,245,234,.18);border-radius:16px;padding:18px 20px;}
-  .panel-quote p{font-size:.9rem;color:rgba(251,245,234,.85);line-height:1.55;margin:0 0 10px;font-style:italic;}
-  .panel-quote strong{font-size:.82rem;color:var(--marigold);}
-
-  /* RIGHT FORM */
-  .form-side{display:flex;align-items:center;justify-content:center;padding:44px 32px;}
-  .form-wrap{width:100%;max-width:460px;}
-  .form-top-link{display:flex;justify-content:flex-end;margin-bottom:4px;}
-  .form-top-link a{font-size:.88rem;font-weight:500;color:rgba(22,48,46,.6);}
-  .form-wrap h1{font-size:1.9rem;margin:10px 0 6px;font-weight:600;}
-  .form-wrap > p.intro{color:rgba(22,48,46,.65);margin:0 0 24px;font-size:.96rem;}
-
-  .role-toggle{display:flex;background:var(--card);border:1px solid var(--line);border-radius:100px;padding:4px;margin-bottom:26px;}
-  .role-toggle button{flex:1;border:none;background:none;padding:11px 8px;border-radius:100px;font-weight:600;font-size:.86rem;cursor:pointer;color:rgba(22,48,46,.55);font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
-  .role-toggle button.active{background:var(--ink);color:var(--paper);}
-
-  form{display:flex;flex-direction:column;gap:16px;}
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .fieldset{display:flex;flex-direction:column;gap:7px;}
-  .fieldset label{font-size:.85rem;font-weight:600;color:rgba(22,48,46,.8);}
-  .input-shell{position:relative;display:flex;align-items:center;}
-  .input-shell svg{position:absolute;left:14px;pointer-events:none;}
-  input, select{
-    width:100%;padding:12px 14px 12px 42px;border-radius:12px;border:1.5px solid var(--line);
-    background:var(--card);font-family:'Inter',sans-serif;font-size:.94rem;color:var(--ink);outline:none;transition:border-color .2s;
-    appearance:none;-webkit-appearance:none;
-  }
-  select{padding-right:36px;}
-  .select-arrow{position:absolute;right:14px;pointer-events:none;left:auto;}
-  input:focus, select:focus{border-color:var(--teal);}
-  .toggle-pass{position:absolute;right:14px;background:none;border:none;cursor:pointer;padding:4px;}
-
-  .helper-only{display:none;}
-  .helper-only.show{display:flex;}
-  .helper-only.show-grid{display:grid;}
-
-  .terms{display:flex;align-items:flex-start;gap:9px;font-size:.85rem;color:rgba(22,48,46,.7);line-height:1.5;}
-  .terms input{width:16px;height:16px;margin-top:2px;accent-color:var(--marigold-deep);flex-shrink:0;padding:0;}
-  .terms a{color:var(--maroon);font-weight:600;}
-
-  .submit-btn{width:100%;padding:15px;margin-top:2px;}
-
-  .switch-line{text-align:center;margin-top:24px;font-size:.92rem;color:rgba(22,48,46,.65);}
-  .switch-line a{color:var(--marigold-deep);font-weight:700;}
-
-  @media (max-width:940px){
-    .page{grid-template-columns:1fr;}
-    .panel{display:none;}
-    .form-side{padding:32px 20px;min-height:100vh;align-items:flex-start;}
-  }
-  @media (max-width:520px){
-    .grid-2{grid-template-columns:1fr;}
-    .form-wrap h1{font-size:1.6rem;}
-  }
+:root{--ink:#16302E;--paper:#FBF5EA;--gold:#E8A33D;--teal:#2F6E68;--card:#FFFDF8;--line:rgba(22,48,46,.13);--red:#A63446}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,sans-serif}.page{min-height:100vh;display:grid;grid-template-columns:.8fr 1.2fr}.aside{background:linear-gradient(160deg,#16302E,#0e2523);color:#fff8ee;padding:48px;display:flex;flex-direction:column;justify-content:space-between}.brand{font:700 1.5rem Fraunces,serif}.aside h1{font:600 clamp(2rem,4vw,3.3rem) Fraunces,serif;line-height:1.1;margin:25px 0 16px}.aside h1 em{color:var(--gold)}.aside p{color:#fff8eeb8;line-height:1.7;max-width:450px}.points{display:grid;gap:14px}.point{padding:15px;border:1px solid #ffffff24;background:#ffffff0b;border-radius:14px}.point b{display:block}.point span{font-size:.84rem;color:#fff8ee99}.main{padding:36px 28px;display:flex;justify-content:center}.card{width:100%;max-width:720px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.top a{font-size:.9rem;color:#596b68}.h{font:600 2.1rem Fraunces,serif;margin:0 0 6px}.sub{color:#647572;margin:0 0 24px}.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}.role{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:15px;text-align:left;cursor:pointer;color:var(--ink)}.role.active{border-color:var(--teal);background:#eef5f2}.role b{display:block}.role span{font-size:.8rem;color:#697b78}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:14px}.field label{display:block;font-size:.83rem;font-weight:700;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:11px;background:var(--card);font:inherit;color:var(--ink);outline:none}.field textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal)}.helper{display:none}.helper.show{display:block}.services{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}.service{border:1px solid var(--line);border-radius:10px;padding:9px;background:var(--card);font-size:.84rem}.service input{width:auto;margin-right:7px}.terms{font-size:.8rem;color:#63716f;margin:10px 0 16px}.terms input{width:auto}.btn{width:100%;border:0;border-radius:100px;padding:14px;background:var(--gold);color:var(--ink);font-weight:800;font-size:.95rem;cursor:pointer}.errors{background:#fff0f0;border:1px solid #e6b8b8;color:#8a2938;border-radius:12px;padding:12px 15px;margin-bottom:18px;font-size:.86rem}.note{font-size:.76rem;color:#71807d;margin-top:10px}.flash{background:#edf7f0;border:1px solid #b9dbc4;color:#28603a;padding:10px 14px;border-radius:10px;margin-bottom:16px}@media(max-width:850px){.page{grid-template-columns:1fr}.aside{display:none}}@media(max-width:560px){.grid,.roles,.services{grid-template-columns:1fr}.main{padding:25px 16px}.h{font-size:1.75rem}}
 </style>
 </head>
 <body>
-
 <div class="page">
-
-  <!-- LEFT: brand panel -->
-  <div class="panel">
-    <a href="/" class="brand">
-      <span class="stamp"><svg width="32" height="32" viewBox="0 0 40 40" fill="none"><path d="M20 2 L23.5 5.5 L28.3 4.3 L30 9 L34.7 10.7 L33.5 15.5 L37 19 L33.5 22.5 L34.7 27.3 L30 29 L28.3 33.7 L23.5 32.5 L20 36 L16.5 32.5 L11.7 33.7 L10 29 L5.3 27.3 L6.5 22.5 L3 19 L6.5 15.5 L5.3 10.7 L10 9 L11.7 4.3 L16.5 5.5 Z" fill="#E8A33D"/><path d="M13.5 20 L18 24.5 L27 14.5" stroke="#16302E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      Sahayika
-    </a>
-
-    <div class="panel-mid">
-      <span class="label">Join Sahayika</span>
-      <h2>Create your account and get <em>verified help</em> — or start earning.</h2>
-      <p>Whether you're hiring or looking for work, it takes less than two minutes to get started.</p>
-
-      <div class="benefit-list">
-        <div class="benefit">
-          <span class="stamp"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(232,163,61,0.18)"/><path d="M8 12.5 L11 15.5 L16 9" stroke="#E8A33D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <div><strong>Free to join, always</strong><small>No hidden fees for families or helpers</small></div>
-        </div>
-        <div class="benefit">
-          <span class="stamp"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(232,163,61,0.18)"/><path d="M12 7 V12 L15.5 14" stroke="#E8A33D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <div><strong>Get matched within 24 hours</strong><small>Fast onboarding &amp; verification</small></div>
-        </div>
-        <div class="benefit">
-          <span class="stamp"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(232,163,61,0.18)"/><path d="M8 16 L8 10 L12 7 L16 10 L16 16" stroke="#E8A33D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <div><strong>Trusted across 30 cities</strong><small>24,000+ families and helpers, and growing</small></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel-quote">
-      <p>"Registering as a helper on Sahayika was the easiest sign-up I've done — verified and got my first booking in 3 days."</p>
-      <strong>— Kamla Bai, Helper Partner, Indore</strong>
+<aside class="aside">
+  <a class="brand" href="{{ route('home') }}">Sahayika</a>
+  <div>
+    <div style="color:#E8A33D;font-size:.78rem;font-weight:700;letter-spacing:.12em">घर की मदद • INDORE</div>
+    <h1>अपने घर के काम के लिए <em>सही मदद</em> ढूंढें।</h1>
+    <p>घर के काम, खाना, बच्चों या बुजुर्गों की देखभाल के लिए अपना profile बनाएं। सहायिका के रूप में काम ढूंढ रहे हैं तो अपनी services और उपलब्ध समय बताएं।</p>
+    <div class="points">
+      <div class="point"><b>Customer / Household</b><span>अपने area में उपलब्ध helpers खोजने के लिए।</span></div>
+      <div class="point"><b>Helper / Sahayika</b><span>अपनी services, experience और availability दिखाने के लिए।</span></div>
     </div>
   </div>
+  <small style="color:#fff8ee80">Demo development app • Sahayika</small>
+</aside>
+<main class="main"><div class="card">
+  <div class="top"><a href="{{ route('home') }}">← Sahayika</a><a href="{{ route('login') }}">Already registered? Login</a></div>
+  <h1 class="h">Sahayika पर जुड़ें</h1><p class="sub">पहले बताएं कि आप किस तरह का account बनाना चाहते हैं।</p>
 
-  <!-- RIGHT: form -->
-  <div class="form-side">
-    <div class="form-wrap">
-      <div class="form-top-link"><a href="/">← Back to home</a></div>
-      <h1>Create your account</h1>
-      <p class="intro">Tell us a little about yourself to get started.</p>
+  @if($errors->any())<div class="errors"><strong>कृपया ये details ठीक करें:</strong><ul style="margin:7px 0 0 18px">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 
-      <div class="role-toggle" role="tablist">
-        <button type="button" class="active" id="tabCustomer" onclick="setRole('customer')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 20 C6 15.5 8.5 13 12 13 C15.5 13 18 15.5 18 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7" r="3.5" stroke="currentColor" stroke-width="1.8"/></svg>
-          I need help
-        </button>
-        <button type="button" id="tabHelper" onclick="setRole('helper')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20 L20 20 M6 20 V10 L12 4 L18 10 V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          I want to work
-        </button>
-      </div>
-
-      <form action="#" method="POST">
-        <div class="grid-2">
-          <div class="fieldset">
-            <label for="fname">Full Name</label>
-            <div class="input-shell">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/><path d="M5 20 C5 16 8 14 12 14 C16 14 19 16 19 20" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/></svg>
-              <input type="text" id="fname" name="full_name" placeholder="Full name" required>
-            </div>
-          </div>
-          <div class="fieldset">
-            <label for="phone">Phone Number</label>
-            <div class="input-shell">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 4 H9 L11 9 L8.5 10.5 C9.5 13 11 14.5 13.5 15.5 L15 13 L20 15 V18 C20 19.1 19.1 20 18 20 C11.4 20 6 14.6 6 8 C6 6.9 6 4 6 4 Z" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.5"/></svg>
-              <input type="tel" id="phone" name="phone" placeholder="+91 98xxxxxx" required>
-            </div>
-          </div>
-        </div>
-
-        <div class="fieldset">
-          <label for="email">Email Address</label>
-          <div class="input-shell">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6 H20 V18 H4 Z" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/><path d="M4 7 L12 13 L20 7" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/></svg>
-            <input type="email" id="email" name="email" placeholder="you@example.com" required>
-          </div>
-        </div>
-
-        <!-- CUSTOMER-ONLY FIELD -->
-        <div class="fieldset role-field customer-only">
-          <label for="address">Home Address / Area</label>
-          <div class="input-shell">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21 C12 21 5 14.5 5 9.5 C5 5.9 8.1 3 12 3 C15.9 3 19 5.9 19 9.5 C19 14.5 12 21 12 21Z" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/><circle cx="12" cy="9.5" r="2.3" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/></svg>
-            <input type="text" id="address" name="address" placeholder="Area, city or pincode">
-          </div>
-        </div>
-
-        <!-- HELPER-ONLY FIELDS -->
-        <div class="grid-2 helper-only" id="helperGrid">
-          <div class="fieldset">
-            <label for="service_type">Service You Offer</label>
-            <div class="input-shell">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 20 L20 20 M6 20 V10 L12 4 L18 10 V20" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/></svg>
-              <select id="service_type" name="service_type">
-                <option>Maid / House Help</option>
-                <option>Cook</option>
-                <option>Babysitter</option>
-                <option>Elderly Care</option>
-                <option>Driver</option>
-                <option>Patient Care</option>
-              </select>
-              <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9 L12 15 L18 9" stroke="#16302E" stroke-opacity="0.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="fieldset">
-            <label for="experience">Experience</label>
-            <div class="input-shell">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/><path d="M12 7 V12 L15.5 14" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/></svg>
-              <select id="experience" name="experience">
-                <option>Less than 1 year</option>
-                <option>1–3 years</option>
-                <option>3–5 years</option>
-                <option>5+ years</option>
-              </select>
-              <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9 L12 15 L18 9" stroke="#16302E" stroke-opacity="0.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="fieldset helper-only" id="helperCity">
-          <label for="city">City / Preferred Work Area</label>
-          <div class="input-shell">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21 C12 21 5 14.5 5 9.5 C5 5.9 8.1 3 12 3 C15.9 3 19 5.9 19 9.5 C19 14.5 12 21 12 21Z" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/><circle cx="12" cy="9.5" r="2.3" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/></svg>
-            <input type="text" id="city" name="city" placeholder="e.g. Indore, Vijay Nagar">
-          </div>
-        </div>
-
-        <div class="fieldset">
-          <label for="password">Create Password</label>
-          <div class="input-shell">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/><path d="M8 10 V7 A4 4 0 0 1 16 7 V10" stroke="#16302E" stroke-opacity="0.45" stroke-width="1.6"/></svg>
-            <input type="password" id="password" name="password" placeholder="At least 8 characters" required>
-            <button type="button" class="toggle-pass" onclick="togglePassword('password')" aria-label="Show password">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 12 C4.5 7 8 4.5 12 4.5 C16 4.5 19.5 7 22 12 C19.5 17 16 19.5 12 19.5 C8 19.5 4.5 17 2 12 Z" stroke="#16302E" stroke-opacity="0.5" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="#16302E" stroke-opacity="0.5" stroke-width="1.6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <label class="terms">
-          <input type="checkbox" required>
-          <span>I agree to Sahayika's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>, and consent to background verification checks.</span>
-        </label>
-
-        <button type="submit" class="btn btn-primary submit-btn" id="submitBtn">Create Account</button>
-      </form>
-
-      <p class="switch-line">Already have an account? <a href="/login">Log in</a></p>
-    </div>
+  <div class="roles">
+    <button type="button" class="role {{ old('role','customer')==='customer'?'active':'' }}" onclick="setRole('customer',this)"><b>🏠 Customer / Household</b><span>घर के लिए सहायिका खोजें</span></button>
+    <button type="button" class="role {{ old('role')==='helper'?'active':'' }}" onclick="setRole('helper',this)"><b>🤝 Helper / Sahayika</b><span>काम और services के लिए profile बनाएं</span></button>
   </div>
 
+  <form method="POST" action="{{ route('register.store') }}">
+    @csrf
+    <input type="hidden" name="role" id="role" value="{{ old('role','customer') }}">
+    <div class="grid">
+      <div class="field"><label for="name">पूरा नाम</label><input id="name" name="name" value="{{ old('name') }}" placeholder="जैसे Neha Sharma" required></div>
+      <div class="field"><label for="phone">Mobile number</label><input id="phone" name="phone" value="{{ old('phone') }}" placeholder="Demo/valid mobile number" required></div>
+    </div>
+    <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" value="{{ old('email') }}" placeholder="you@example.com"></div>
+
+    <div class="grid">
+      <div class="field"><label for="locality_id">Indore locality</label>
+        <select id="locality_id" name="locality_id"><option value="">Locality चुनें</option>@foreach($localities as $locality)<option value="{{ $locality->id }}" @selected(old('locality_id')==$locality->id)>{{ $locality->name }}</option>@endforeach</select>
+      </div>
+      <div class="field"><label for="pincode">Pincode</label><input id="pincode" name="pincode" value="{{ old('pincode') }}" placeholder="4520xx"></div>
+    </div>
+    <div class="field"><label for="address_line">Area / address</label><input id="address_line" name="address_line" value="{{ old('address_line') }}" placeholder="Fictional/demo address or locality"></div>
+
+    <section id="helperFields" class="helper {{ old('role')==='helper'?'show':'' }}">
+      <div class="grid">
+        <div class="field"><label for="gender">Gender</label><select id="gender" name="gender"><option value="">Select</option><option value="female" @selected(old('gender')==='female')>Female</option><option value="male" @selected(old('gender')==='male')>Male</option><option value="other" @selected(old('gender')==='other')>Other</option><option value="prefer_not_to_say" @selected(old('gender')==='prefer_not_to_say')>Prefer not to say</option></select></div>
+        <div class="field"><label for="date_of_birth">Date of birth <span style="font-weight:400">(optional)</span></label><input id="date_of_birth" type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"></div>
+      </div>
+      <div class="grid">
+        <div class="field"><label for="experience_years">Experience (years)</label><input id="experience_years" type="number" min="0" max="60" name="experience_years" value="{{ old('experience_years',0) }}"></div>
+        <div class="field"><label for="expected_salary">Expected salary</label><input id="expected_salary" type="number" min="0" name="expected_salary" value="{{ old('expected_salary') }}" placeholder="₹ per selected period"></div>
+      </div>
+      <div class="grid">
+        <div class="field"><label for="work_type">Work type</label><select id="work_type" name="work_type"><option value="part_time" @selected(old('work_type','part_time')==='part_time')>Part-time</option><option value="full_time" @selected(old('work_type')==='full_time')>Full-time</option></select></div>
+        <div class="field"><label for="salary_type">Salary type</label><select id="salary_type" name="salary_type"><option value="monthly">Monthly</option><option value="daily">Daily</option><option value="hourly">Hourly</option></select></div>
+      </div>
+      <div class="field"><label>आप कौन-सी services दे सकती/सकते हैं?</label><div class="services">@foreach($services as $service)<label class="service"><input type="checkbox" name="service_ids[]" value="{{ $service->id }}" @checked(in_array($service->id, old('service_ids',[])))> {{ $service->name_hi ?: $service->name }}</label>@endforeach</div></div>
+      <div class="field"><label for="languages">Languages</label><input id="languages" name="languages" value="{{ old('languages','Hindi') }}" placeholder="Hindi, Basic English"></div>
+      <div class="field"><label for="bio">About / experience</label><textarea id="bio" name="bio" placeholder="अपने काम और experience के बारे में बताएं">{{ old('bio') }}</textarea></div>
+      <label class="terms"><input type="checkbox" name="immediate_availability" value="1" @checked(old('immediate_availability',true))> अभी काम के लिए available हूँ</label>
+    </section>
+
+    <div class="grid">
+      <div class="field"><label for="password">Password</label><input id="password" type="password" name="password" placeholder="कम से कम 8 characters" required></div>
+      <div class="field"><label for="password_confirmation">Confirm password</label><input id="password_confirmation" type="password" name="password_confirmation" required></div>
+    </div>
+    <label class="terms"><input type="checkbox" required> मैं समझता/समझती हूँ कि यह account development/demo environment के लिए हो सकता है और सही जानकारी देना मेरी जिम्मेदारी है।</label>
+    <button class="btn" type="submit">Account बनाएं</button>
+    <p class="note">हम Aadhaar, PAN, bank details या identity documents registration में नहीं मांग रहे हैं।</p>
+  </form>
+</div></main>
 </div>
-
 <script>
-  function setRole(role){
-    const isHelper = role === 'helper';
-    document.getElementById('tabCustomer').classList.toggle('active', !isHelper);
-    document.getElementById('tabHelper').classList.toggle('active', isHelper);
-
-    document.getElementById('helperGrid').classList.toggle('show-grid', isHelper);
-    document.getElementById('helperCity').classList.toggle('show', isHelper);
-
-    document.querySelectorAll('.customer-only').forEach(el=>{
-      el.style.display = isHelper ? 'none' : 'flex';
-    });
-
-    document.getElementById('submitBtn').textContent = isHelper ? 'Register as Helper' : 'Create Account';
-  }
-  function togglePassword(id){
-    const input = document.getElementById(id);
-    input.type = input.type === 'password' ? 'text' : 'password';
-  }
+function setRole(role, button){
+ document.getElementById('role').value=role;
+ document.querySelectorAll('.role').forEach(x=>x.classList.remove('active')); button.classList.add('active');
+ document.getElementById('helperFields').classList.toggle('show', role==='helper');
+ document.querySelectorAll('#helperFields input,#helperFields select,#helperFields textarea').forEach(el=>el.disabled=role!=='helper');
+}
+setRole(document.getElementById('role').value, document.querySelector('.role.active'));
 </script>
-
 </body>
 </html>

@@ -7,6 +7,7 @@
     <title>Sahayika — भरोसेमंद घरेलू सहायिका खोजें | Maid, Cook, Baby & Elder Care</title>
     <meta name="description" content="अपने शहर में घर के काम, बर्तन-झाड़ू, खाना बनाने, कपड़े धोने, बेबी केयर और बुज़ुर्गों की देखभाल के लिए सहायिका खोजें। प्रोफाइल देखें, अनुभव जानें और सीधे संपर्क करें — Sahayika पर।">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -247,7 +248,7 @@
             background: var(--marigold-deep);
         }
 
-        h1.headline {
+        h2.headline {
             font-size: clamp(2.4rem, 4.6vw, 3.6rem);
             line-height: 1.06;
             font-weight: 700;
@@ -255,7 +256,7 @@
             letter-spacing: -0.01em;
         }
 
-        h1.headline em {
+        h2.headline em {
             font-style: italic;
             font-weight: 500;
             color: var(--marigold-deep);
@@ -1028,13 +1029,7 @@
     <header id="siteHeader">
         <div class="wrap nav">
             <a href="/" class="brand">
-                <span class="stamp">
-                    <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
-                        <path d="M20 2 L23.5 5.5 L28.3 4.3 L30 9 L34.7 10.7 L33.5 15.5 L37 19 L33.5 22.5 L34.7 27.3 L30 29 L28.3 33.7 L23.5 32.5 L20 36 L16.5 32.5 L11.7 33.7 L10 29 L5.3 27.3 L6.5 22.5 L3 19 L6.5 15.5 L5.3 10.7 L10 9 L11.7 4.3 L16.5 5.5 Z" fill="#E8A33D" stroke="#16302E" stroke-width="1.2" />
-                        <path d="M13.5 20 L18 24.5 L27 14.5" stroke="#16302E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </span>
-                Sahayika
+              <img src="{{ asset('assets/img/sahayika.png') }}" alt="" width="170px">
             </a>
             <nav class="nav-links">
                 <a href="#services">सेवाएं</a>
@@ -1067,32 +1062,31 @@
         <div class="wrap hero-grid">
             <div>
                 <div class="eyebrow"><span class="dot"></span><span class="label" style="letter-spacing:.08em;">अपने शहर में घर की मदद</span></div>
-                <h1 class="headline">घर के काम में मदद चाहिए? <em>भरोसे की सहायिका</em> ढूंढें।</h1>
+                <h2 class="headline">घर के काम में मदद चाहिए? <em>भरोसे की सहायिका</em> ढूंढें।</h2>
                 <p class="sub">झाड़ू-पोंछा, बर्तन, खाना बनाने वाली, कपड़े धोना, बेबी केयर, बच्चों और बुज़ुर्गों की देखभाल — अपने शहर की सहायिका के प्रोफाइल देखें, अनुभव व सेवाएं जानें, और सीधे बात करें।</p>
 
-                <form class="search-card" method="GET" action="{{ route('helpers.index') }}">
+                <div class="search-card">
                     <div class="search-row">
                         <div class="field">
                             <label>किस काम के लिए</label>
-                            <select name="service">
-                                <option value="">सभी सेवाएं</option>
-                                @foreach($searchServices as $searchService)
-                                    <option value="{{ $searchService->slug }}">{{ $searchService->name_hi ?: $searchService->name }}</option>
-                                @endforeach
+                            <select>
+                                <option>सेवाएं</option>
+                                <option>झाड़ू-पोंछा, बर्तन व सफाई</option>
+                                <option>खाना बनाने वाली</option>
+                                <option>कपड़े धोना / प्रेस</option>
+                                <option>Baby Care / आया</option>
+                                <option>बच्चों की देखभाल</option>
+                                <option>बुज़ुर्गों की देखभाल</option>
+                                <option>हर काम में माहिर</option>
                             </select>
                         </div>
                         <div class="field">
                             <label>अपना इलाका</label>
-                            <input type="text" name="locality" list="home-localities" placeholder="इलाका या पिनकोड डालें">
-                            <datalist id="home-localities">
-                                @foreach($searchLocalities as $searchLocality)
-                                    <option value="{{ $searchLocality->name }}">
-                                @endforeach
-                            </datalist>
+                            <input type="text" placeholder="इलाका या पिनकोड डालें">
                         </div>
-                        <button type="submit" class="btn btn-primary">सहायिका/सहायक खोजें</button>
+                        <button class="btn btn-primary">सहायिका/सहायक खोजें</button>
                     </div>
-                </form>
+                </div>
 
                 <div class="trust-line">
                     <div class="avatars">
@@ -1415,15 +1409,15 @@
                     <span class="label">कंपनी</span>
                     <a href="#how">कैसे काम करता है</a>
                     <a href="#become">सहायिका बनें</a>
-                    <a href="{{ route('careers') }}">Careers</a>
-                    <a href="{{ route('contact') }}">संपर्क करें</a>
+                    <a href="#">Careers</a>
+                    <a href="#">संपर्क करें</a>
                 </div>
                 <div class="footer-col">
                     <span class="label">अकाउंट</span>
                     <a href="/login">लॉग इन</a>
                     <a href="/register">रजिस्टर करें</a>
-                    <a href="{{ route('help') }}">Help Center</a>
-                    <a href="{{ route('privacy') }}">Privacy Policy</a>
+                    <a href="#">Help Center</a>
+                    <a href="#">Privacy Policy</a>
                 </div>
             </div>
             <div class="footer-bottom">
