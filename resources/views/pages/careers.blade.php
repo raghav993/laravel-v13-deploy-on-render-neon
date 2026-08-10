@@ -14,7 +14,7 @@
     </div>
     <div class="col-lg-6">
       <div class="card border-0 shadow overflow-hidden">
-        <img src="{{ asset('assets/img/testimonials/3.png') }}" class="w-100" style="height:360px;object-fit:cover;" alt="Join Sahayika">
+        <img src="{{ asset('assets/img/career.jpg') }}" class="w-100" style="height:360px;object-fit:cover;" alt="Join Sahayika">
         <div class="card-body p-4">
           <div class="d-flex align-items-center gap-3 mb-3"><span class="rounded-circle bg-success-subtle p-3"><i class="bi bi-people-fill text-success fs-4"></i></span><div><h2 class="h5 mb-1">हमारी टीम से जुड़ना चाहते हैं?</h2><p class="small text-secondary mb-0">Openings उपलब्ध होने पर यही page update होगा।</p></div></div>
           <a class="btn btn-dark rounded-pill px-4" href="{{ route('contact') }}">हमसे संपर्क करें <i class="bi bi-arrow-right ms-1"></i></a>

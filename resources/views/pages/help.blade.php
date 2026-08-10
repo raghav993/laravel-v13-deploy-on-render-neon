@@ -9,7 +9,7 @@
     </div>
     <div class="col-lg-5">
       <div class="card border-0 shadow-sm overflow-hidden">
-        <img src="{{ asset('assets/img/testimonials/1.png') }}" class="w-100" style="height:240px;object-fit:cover;" alt="Sahayika support">
+        <img src="{{ asset('assets/img/help1.jpg') }}" class="w-100" style="height:240px;object-fit:cover;" alt="Sahayika support">
         <div class="card-body">
           <div class="d-flex align-items-center gap-2"><i class="bi bi-chat-heart-fill text-danger fs-4"></i><strong>Need more help?</strong></div>
           <p class="small text-secondary mb-3">हमसे संपर्क करें और अपनी query बताएं।</p>

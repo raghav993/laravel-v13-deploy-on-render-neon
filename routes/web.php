@@ -72,3 +72,5 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(functi
     Route::post('/admin/settings', [DashboardController::class, 'settingsSave'])->name('admin.settings.save');
     Route::get('/admin/bookings', [DashboardController::class, 'bookings'])->name('admin.bookings');
 });
+
+require __DIR__.'/local-workers.php';
