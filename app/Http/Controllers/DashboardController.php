@@ -35,7 +35,8 @@ class DashboardController extends Controller
         $bookings=$u->bookings()->with(['helper.user','service'])->latest()->take(5)->get();
         $favorites=$u->favorites()->with(['helper.user','helper.services','helper.locality.city'])->latest()->take(6)->get();
         $recommended=HelperProfile::with(['user','services','locality.city'])->active()->latest()->take(6)->get();
-        return view('dashboard.customer', compact('bookings','favorites','recommended'));
+        $contactRequests = \App\Models\ContactRequest::where('customer_id', $u->id)->with('helperProfile.user:id,name')->latest()->take(8)->get();
+        return view('dashboard.customer', compact('bookings','favorites','recommended','contactRequests'));
     }
 
     private function helper() {
@@ -44,9 +45,10 @@ class DashboardController extends Controller
         $bookings=$p->bookings()->with(['customer','service'])->latest()->take(8)->get();
         $remarks=$p->remarks()->with('customer')->latest()->take(5)->get();
         $services=$p->services()->orderBy('name')->get();
+        $contactRequests=\App\Models\ContactRequest::whereHas('helperProfile', fn($q)=>$q->where('user_id',$u->id))->with('customer:id,name')->latest()->take(8)->get();
         $completed=$p->bookings()->where('status','completed')->count();
         $earnings=$p->bookings()->where('status','completed')->sum('agreed_amount');
-        return view('dashboard.helper', compact('p','bookings','remarks','services','completed','earnings'));
+        return view('dashboard.helper', compact('p','bookings','remarks','services','contactRequests','completed','earnings'));
     }
 
     private function admin() {
@@ -71,6 +73,9 @@ class DashboardController extends Controller
     public function updateProfile(Request $r) {
         $this->role(); $u=auth()->user();
         $data=$r->validate(['name'=>'required|string|max:120','phone'=>'required|string|max:20|unique:users,phone,'.$u->id,'email'=>'required|email|max:255|unique:users,email,'.$u->id]);
+        if (array_key_exists('phone', $data) && $data['phone'] !== $u->phone) {
+            $data['phone_verified_at'] = null;
+        }
         $u->update($data);
         if($u->isHelper()) {
             $p=$u->helperProfile; $p->update($r->validate([
@@ -157,7 +162,9 @@ class DashboardController extends Controller
     }
     public function userUpdate(Request $r, User $user) {
         $this->role('admin');
-        $d=$r->validate(['name'=>'required|max:120','email'=>'required|email|unique:users,email,'.$user->id,'phone'=>'nullable|max:20|unique:users,phone,'.$user->id,'role'=>'required|in:customer,helper,admin']);
+        $d=$r->validate(['name'=>'required|max:120','email'=>'required|email|unique:users,email,'.$user->id,'phone'=>'nullable|max:20|unique:users,phone,'.$user->id,'role'=>'required|in:customer,helper,admin','phone_verified'=>'nullable|boolean']);
+        $d['phone_verified_at'] = $r->boolean('phone_verified') ? ($user->phone !== $d['phone'] ? null : ($user->phone_verified_at ?: now())) : null;
+        unset($d['phone_verified']);
         $user->update($d); return back()->with('success','User updated.');
     }
     public function services() {

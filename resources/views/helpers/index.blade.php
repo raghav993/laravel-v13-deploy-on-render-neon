@@ -8,6 +8,7 @@
     <meta name="description" content="Indore में घरेलू काम, खाना, Baby Care और Elder Care के लिए सहायिका खोजें।">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
+        <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -388,7 +389,6 @@
         .pagination span {
             border-radius: 9px !important
         }
-
 
         .map-results-shell {
             display: grid;
@@ -821,14 +821,94 @@
                 display: none
             }
         }
+
+        .user-profile {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+            color: inherit;
+            padding: 5px 10px;
+            border-radius: 25px;
+            transition: all 0.2s ease;
+        }
+
+        .user-profile:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar-placeholder {
+            background: #198754;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .user-name {
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .user-name {
+                display: none;
+            }
+
+            .user-profile {
+                padding: 3px;
+            }
+
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <header>
         <div class="wrap">
-            <nav><a href="{{ route('home') }}" class="brand">Sahayika</a>
-                <div class="navlinks"><a href="{{ route('home') }}">होम</a><a href="{{ route('helpers.index') }}">सहायिका खोजें</a><a href="{{ route('register') }}">सहायिका बनें</a></div><a class="navbtn" href="{{ route('login') }}">लॉगिन</a>
+            <nav class="nav-links"><a href="{{ route('home') }}" class="brand">Sahayika</a>
+                <a href="{{ route('home') }}">होम</a>
+                <a href="{{ route('helpers.index') }}">सहायिका खोजें</a>
+                @auth
+                @php
+                $user = auth()->user();
+                $dashboardRoute = match ($user->role ?? 'customer') {
+                'admin' => route('dashboard.index'),
+                'helper', 'sahayika' => route('dashboard.index'),
+                'customer' => route('dashboard.index'),
+                default => route('dashboard.index'),
+                };
+                $avatar = $user->avatar ?? $user->profile_image ?? null;
+                @endphp
+                <a href="{{ $dashboardRoute }}" class="user-profile">
+                    @if($avatar)
+                    <img src="{{ asset('storage/' . $avatar) }}"
+                        alt="{{ $user->name }}"
+                        class="user-avatar">
+                    @else
+                    <span class="user-avatar user-avatar-placeholder">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </span>
+                    @endif
+                    <span class="user-name">{{ $user->name }}</span>
+                </a>
+                @else
+                <a class="navbtn" href="{{ route('login') }}">लॉगिन</a>
+                @endauth
             </nav>
         </div>
     </header>
@@ -854,7 +934,6 @@
                     <div class="muted">Map पर profile location देखें और marker पर क्लिक करके profile खोलें</div>
                 </div>
             </div>
-
             @if(request()->filled('service') || request()->filled('locality'))
             <div class="chips">
                 @if($service)<span class="chip">काम: {{ $service->name_hi ?: $service->name }}</span>@endif
@@ -863,19 +942,16 @@
             </div>
             <br>
             @endif
-
             <div class="map-results-shell">
                 <div class="map-pane">
                     <div id="helperMap"></div>
                     <div class="map-label"><i class="bi bi-geo-alt-fill me-1"></i> Indore · {{ $helpers->total() }} profiles</div>
                 </div>
-
                 <div class="results-pane" id="helperResults">
                     <div class="results-header">
                         <strong>{{ $helpers->total() }} सहायिका{{ $helpers->total() === 1 ? '' : 'एँ' }}</strong>
                         <span>{{ $helpers->total() ? 'Profiles उपलब्ध' : 'अभी कोई profile नहीं' }}</span>
                     </div>
-
                     @if($helpers->count())
                     @foreach($helpers as $helper)
                     @php
@@ -911,26 +987,22 @@
                             </div>
                             @if($helper->immediate_availability)<span class="result-status">Available</span>@endif
                         </div>
-
                         <div class="result-meta">
                             <span><i class="bi bi-award me-1"></i>{{ $helper->experience_years }} साल अनुभव</span>
                             <span><i class="bi bi-clock me-1"></i>{{ $helper->work_type === 'full_time' ? 'Full-time' : 'Part-time' }}</span>
                         </div>
-
                         <div class="result-services">
                             @foreach($helper->services->take(3) as $item)
                             <span>{{ $item->name_hi ?: $item->name }}</span>
                             @endforeach
                             @if($helper->services->count()>3)<span>+{{ $helper->services->count()-3 }} और</span>@endif
                         </div>
-
                         <div class="result-foot">
                             <div class="result-salary">₹{{ number_format($helper->expected_salary) }} <small>/ माह</small></div>
                             <span class="result-link">Profile देखें <i class="bi bi-arrow-right"></i></span>
                         </div>
                     </a>
                     @endforeach
-
                     <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
                         <div class="text-muted small">
                             Showing {{ $helpers->firstItem() }} to {{ $helpers->lastItem() }} of {{ $helpers->total() }}
@@ -949,7 +1021,6 @@
             </div>
         </div>
     </main>
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
@@ -957,47 +1028,38 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mapEl = document.getElementById('helperMap');
             if (!mapEl) return;
-
             // Indore center. Helper-specific coordinates are used when available.
             const map = L.map('helperMap', {
                 scrollWheelZoom: true,
                 zoomControl: true,
                 preferCanvas: true
             }).setView([22.7196, 75.8577], 12);
-
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
-
             // Leaflet needs a size refresh when the grid/container has just been painted.
             requestAnimationFrame(() => map.invalidateSize(false));
             window.addEventListener('resize', () => map.invalidateSize(false));
-
             const cards = [...document.querySelectorAll('.helper-result-card')];
             const markers = {};
             const bounds = [];
-
             const escapeHtml = (value) => {
                 const div = document.createElement('div');
                 div.textContent = value ?? '';
                 return div.innerHTML;
             };
-
             cards.forEach(card => {
                 const lat = parseFloat(card.dataset.lat);
                 const lng = parseFloat(card.dataset.lng);
-
                 // If a profile does not yet have coordinates, it remains in the list
                 // but is not placed as a false location on the map.
                 if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-
                 const photo = card.dataset.photo;
                 const initials = card.dataset.initials || '?';
                 const avatar = photo ?
                     `<img src="${escapeHtml(photo)}" alt="" onerror="this.style.display='none'">` :
                     `<span>${escapeHtml(initials)}</span>`;
-
                 const icon = L.divIcon({
                     className: '',
                     html: `<div class="custom-marker">${avatar}</div>`,
@@ -1005,11 +1067,9 @@
                     iconAnchor: [22, 48],
                     popupAnchor: [0, -45]
                 });
-
                 const marker = L.marker([lat, lng], {
                     icon
                 }).addTo(map);
-
                 marker.bindPopup(`
             <div>
                 <div class="map-popup-name">${escapeHtml(card.dataset.name)}</div>
@@ -1020,7 +1080,6 @@
                 <a class="map-popup-link" href="${escapeHtml(card.dataset.profileUrl)}">पूरी Profile देखें →</a>
             </div>
         `);
-
                 marker.on('click', function() {
                     cards.forEach(c => c.classList.remove('active'));
                     card.classList.add('active');
@@ -1029,10 +1088,8 @@
                         block: 'nearest'
                     });
                 });
-
                 markers[card.dataset.helperId] = marker;
                 bounds.push([lat, lng]);
-
                 card.addEventListener('mouseenter', () => marker.setZIndexOffset(1000));
                 card.addEventListener('mouseleave', () => marker.setZIndexOffset(0));
                 card.addEventListener('click', () => {
@@ -1044,7 +1101,6 @@
                     }
                 });
             });
-
             if (bounds.length > 1) {
                 map.fitBounds(bounds, {
                     padding: [45, 45],
@@ -1055,7 +1111,6 @@
             }
         });
     </script>
-
 </body>
 
 </html>

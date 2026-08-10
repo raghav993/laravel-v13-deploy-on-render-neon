@@ -315,6 +315,20 @@
 @if(auth()->check() && auth()->user()->isCustomer())
 <form method="POST" action="{{ route('dashboard.helper.favorite',$helperProfile) }}">@csrf<button class="btn secondary" type="submit"><i class="bi bi-heart me-1"></i> Save</button></form>
 <button class="btn" data-bs-toggle="modal" data-bs-target="#bookModal">बुकिंग अनुरोध</button>
+
+@if(!$contactRequest || $contactRequest->status === 'denied')
+<form method="POST" action="{{ route('dashboard.helper.contact',$helperProfile) }}">
+@csrf
+<button class="btn" type="submit"><i class="bi bi-chat-dots me-1"></i> Contact / Request</button>
+</form>
+@elseif($contactRequest->status === 'pending')
+<span class="btn" style="background:#eef4f0;cursor:default"><i class="bi bi-hourglass-split me-1"></i> Request Sent</span>
+@elseif($contactRequest->status === 'accepted' && !$contactRequest->blocked_at)
+<a class="btn" href="{{ route('dashboard.contacts.chat',$contactRequest) }}"><i class="bi bi-chat-dots me-1"></i> Chat / Call</a>
+@else
+<span class="btn" style="background:#eee;cursor:default"><i class="bi bi-slash-circle me-1"></i> Contact Blocked</span>
+@endif
+
 @elseif(auth()->check())
 <a class="btn" href="{{ route('dashboard.index') }}">Dashboard</a>
 @else

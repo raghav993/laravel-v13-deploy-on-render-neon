@@ -2,19 +2,109 @@
 @section('heading','Helper Dashboard')
 @section('content')
 <div class="row g-3 mb-4">
-@foreach([['Profile Status',$p->profile_status,'bi-person-check'],['Completed',$completed,'bi-check-circle'],['Earnings','₹'.number_format($earnings),'bi-cash-stack'],['Rating',$remarks->whereNotNull('rating')->count() ? number_format($remarks->whereNotNull('rating')->avg('rating'),1).' / 5':'New','bi-star']] as $s)<div class="col-6 col-xl-3"><div class="card bg-white p-3 h-100"><i class="bi {{ $s[2] }} fs-4 text-brand"></i><small class="text-muted mt-2">{{ $s[0] }}</small><strong class="fs-4">{{ $s[1] }}</strong></div></div>@endforeach
+    @foreach([['Profile Status',$p->profile_status,'bi-person-check'],['Completed',$completed,'bi-check-circle'],['Earnings','₹'.number_format($earnings),'bi-cash-stack'],['Rating',$remarks->whereNotNull('rating')->count() ? number_format($remarks->whereNotNull('rating')->avg('rating'),1).' / 5':'New','bi-star']] as $s)<div class="col-6 col-xl-3">
+        <div class="card bg-white p-3 h-100"><i class="bi {{ $s[2] }} fs-4 text-brand"></i><small class="text-muted mt-2">{{ $s[0] }}</small><strong class="fs-4">{{ $s[1] }}</strong></div>
+    </div>@endforeach
 </div>
+
+<div class="card bg-white p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h5 class="mb-1">Contact requests</h5>
+            <p class="text-muted small mb-0">Accept a request to enable private chat and secure calling.</p>
+        </div>
+        <a class="btn btn-sm btn-outline-primary" href="{{ route('dashboard.contacts.index') }}">View all</a>
+    </div>
+    @forelse($contactRequests as $cr)
+    <div class="border rounded-4 p-3 mb-2">
+        <div class="d-flex justify-content-between align-items-center gap-2">
+            <div><strong>{{ $cr->customer->name }}</strong>
+                <div class="small text-muted">{{ $cr->created_at->diffForHumans() }}</div>
+            </div>
+            <span class="badge text-bg-{{ $cr->status==='pending'?'warning':($cr->status==='accepted'?'success':($cr->status==='blocked'?'dark':'secondary')) }}">{{ ucfirst($cr->status) }}</span>
+        </div>
+        @if($cr->status === 'pending')
+        <div class="d-flex gap-2 mt-3">
+            <form method="POST" action="{{ route('dashboard.contacts.accept',$cr) }}">@csrf<button class="btn btn-sm btn-success">Accept</button></form>
+            <form method="POST" action="{{ route('dashboard.contacts.deny',$cr) }}">@csrf<button class="btn btn-sm btn-outline-danger">Deny</button></form>
+        </div>
+        @elseif($cr->status === 'accepted' && !$cr->blocked_at)
+        <a class="btn btn-sm btn-primary mt-3" href="{{ route('dashboard.contacts.chat',$cr) }}"><i class="bi bi-chat-dots me-1"></i>Open Chat</a>
+        @endif
+    </div>
+    @empty
+    <p class="text-muted mb-0">No contact requests yet.</p>
+    @endforelse
+</div>
+
 <div class="row g-4">
-<div class="col-xl-8">
-<div class="card bg-white p-4 mb-4" id="bookings"><div class="d-flex justify-content-between"><div><h5>Job requests & bookings</h5><p class="text-muted small">Accept, reject and complete requests from customers.</p></div>
-<form method="POST" action="{{ route('dashboard.helper.availability') }}" class="d-flex gap-2 align-items-center">@csrf<select name="availability_status" class="form-select form-select-sm"><option value="available" @selected($p->availability_status==='available')>Available</option><option value="busy" @selected($p->availability_status==='busy')>Busy</option><option value="unavailable" @selected($p->availability_status==='unavailable')>Unavailable</option></select><input type="hidden" name="immediate_availability" value="1"><button class="btn btn-sm btn-primary">Update</button></form></div>
-<div class="table-responsive"><table class="table align-middle"><thead><tr><th>Customer</th><th>Service</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody>
-@forelse($bookings as $b)<tr><td>{{ $b->customer->name }}<div class="small text-muted">{{ $b->customer->phone }}</div></td><td>{{ $b->service?->name ?: 'General help' }}</td><td>{{ $b->booking_date?->format('d M Y') ?: 'Flexible' }}</td><td><span class="badge text-bg-{{ in_array($b->status,['accepted','confirmed'])?'success':($b->status==='rejected'?'danger':'warning') }}">{{ ucfirst($b->status) }}</span></td><td><div class="d-flex gap-1">@if($b->status==='pending')<form method="POST" action="{{ route('dashboard.booking.status',$b) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="accepted"><button class="btn btn-sm btn-success">Accept</button></form><form method="POST" action="{{ route('dashboard.booking.status',$b) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="rejected"><button class="btn btn-sm btn-outline-danger">Reject</button></form>@elseif(in_array($b->status,['accepted','confirmed']))<form method="POST" action="{{ route('dashboard.booking.status',$b) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="completed"><button class="btn btn-sm btn-primary">Complete</button></form>@endif</div></td></tr>
-@empty<tr><td colspan="5" class="text-center text-muted py-4">No job requests yet.</td></tr>@endforelse</tbody></table></div></div>
-<div class="card bg-white p-4" id="remarks"><h5>Customer remarks</h5>@forelse($remarks as $r)<div class="border-bottom py-3"><div class="d-flex justify-content-between"><strong>{{ $r->customer->name }}</strong><span class="text-warning">{{ str_repeat('★',$r->rating ?: 0) }}</span></div><p class="mb-0 text-muted">{{ $r->remark }}</p></div>@empty<p class="text-muted">Customer feedback will appear here.</p>@endforelse</div>
+    <div class="col-xl-8">
+        <div class="card bg-white p-4 mb-4" id="bookings">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h5>Job requests & bookings</h5>
+                    <p class="text-muted small">Accept, reject and complete requests from customers.</p>
+                </div>
+                <form method="POST" action="{{ route('dashboard.helper.availability') }}" class="d-flex gap-2 align-items-center">@csrf<select name="availability_status" class="form-select form-select-sm">
+                        <option value="available" @selected($p->availability_status==='available')>Available</option>
+                        <option value="busy" @selected($p->availability_status==='busy')>Busy</option>
+                        <option value="unavailable" @selected($p->availability_status==='unavailable')>Unavailable</option>
+                    </select><input type="hidden" name="immediate_availability" value="1"><button class="btn btn-sm btn-primary">Update</button></form>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($bookings as $b)<tr>
+                            <td>{{ $b->customer->name }}
+                                <div class="small text-muted">Contact details are protected</div>
+                            </td>
+                            <td>{{ $b->service?->name ?: 'General help' }}</td>
+                            <td>{{ $b->booking_date?->format('d M Y') ?: 'Flexible' }}</td>
+                            <td><span class="badge text-bg-{{ in_array($b->status,['accepted','confirmed'])?'success':($b->status==='rejected'?'danger':'warning') }}">{{ ucfirst($b->status) }}</span></td>
+                            <td>
+                                <div class="d-flex gap-1">@if($b->status==='pending')<form method="POST" action="{{ route('dashboard.booking.status',$b) }}">@csrf <input type="hidden" name="status" value="accepted"><button class="btn btn-sm btn-success">Accept</button></form>
+                                    <form method="POST" action="{{ route('dashboard.booking.status',$b) }}">@csrf <input type="hidden" name="status" value="rejected"><button class="btn btn-sm btn-outline-danger">Reject</button></form>@elseif(in_array($b->status,['accepted','confirmed']))<form method="POST" action="{{ route('dashboard.booking.status',$b) }}">@csrf <input type="hidden" name="status" value="completed"><button class="btn btn-sm btn-primary">Complete</button></form>@endif
+                                </div>
+                            </td>
+                        </tr>
+                        @empty<tr>
+                            <td colspan="5" class="text-center text-muted py-4">No job requests yet.</td>
+                        </tr>@endforelse</tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card bg-white p-4" id="remarks">
+            <h5>Customer remarks</h5>@forelse($remarks as $r)<div class="border-bottom py-3">
+                <div class="d-flex justify-content-between"><strong>{{ $r->customer->name }}</strong><span class="text-warning">{{ str_repeat('★',$r->rating ?: 0) }}</span></div>
+                <p class="mb-0 text-muted">{{ $r->remark }}</p>
+            </div>@empty<p class="text-muted">Customer feedback will appear here.</p>@endforelse
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card bg-white p-4 mb-4">
+            <h5>Availability</h5>
+            <p class="small text-muted">Control whether customers can request you.</p>
+            <form method="POST" action="{{ route('dashboard.helper.availability') }}">@csrf<div class="mb-3"><select name="availability_status" class="form-select">
+                        <option value="available" @selected($p->availability_status==='available')>Available for work</option>
+                        <option value="busy" @selected($p->availability_status==='busy')>Currently busy</option>
+                        <option value="unavailable" @selected($p->availability_status==='unavailable')>Not available</option>
+                    </select></div>
+                <div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="immediate_availability" value="1" @checked($p->immediate_availability)><label class="form-check-label">Immediate availability</label></div><button class="btn btn-primary w-100">Save availability</button>
+            </form>
+        </div>
+        <div class="card bg-white p-4" id="services">
+            <h5>My services</h5>
+            <form method="POST" action="{{ route('dashboard.helper.services') }}">@csrf<div class="small text-muted mb-2">Select every service you provide.</div>@php($allServices=\App\Models\Service::where('is_active',true)->orderBy('name')->get())@foreach($allServices as $s)<div class="form-check"><input class="form-check-input" type="checkbox" name="service_ids[]" value="{{ $s->id }}" id="s{{ $s->id }}" @checked($services->contains($s->id))><label class="form-check-label" for="s{{ $s->id }}">{{ $s->name_hi ?: $s->name }}</label></div>@endforeach<button class="btn btn-outline-primary w-100 mt-3">Update Services</button></form>
+        </div>
+    </div>
 </div>
-<div class="col-xl-4">
-<div class="card bg-white p-4 mb-4"><h5>Availability</h5><p class="small text-muted">Control whether customers can request you.</p><form method="POST" action="{{ route('dashboard.helper.availability') }}">@csrf<div class="mb-3"><select name="availability_status" class="form-select"><option value="available" @selected($p->availability_status==='available')>Available for work</option><option value="busy" @selected($p->availability_status==='busy')>Currently busy</option><option value="unavailable" @selected($p->availability_status==='unavailable')>Not available</option></select></div><div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="immediate_availability" value="1" @checked($p->immediate_availability)><label class="form-check-label">Immediate availability</label></div><button class="btn btn-primary w-100">Save availability</button></form></div>
-<div class="card bg-white p-4" id="services"><h5>My services</h5><form method="POST" action="{{ route('dashboard.helper.services') }}">@csrf<div class="small text-muted mb-2">Select every service you provide.</div>@php($allServices=\App\Models\Service::where('is_active',true)->orderBy('name')->get())@foreach($allServices as $s)<div class="form-check"><input class="form-check-input" type="checkbox" name="service_ids[]" value="{{ $s->id }}" id="s{{ $s->id }}" @checked($services->contains($s->id))><label class="form-check-label" for="s{{ $s->id }}">{{ $s->name_hi ?: $s->name }}</label></div>@endforeach<button class="btn btn-outline-primary w-100 mt-3">Update Services</button></form></div>
-</div></div>
 @endsection

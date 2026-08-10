@@ -1035,3 +1035,55 @@ footer {
     font-size: 18px;
     margin-top: 6px;
 }
+.user-profile {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    color: inherit;
+    padding: 5px 10px;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+}
+
+.user-profile:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar-placeholder {
+    background: #198754;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.user-name {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .user-name {
+        display: none;
+    }
+
+    .user-profile {
+        padding: 3px;
+    }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+    }
+}

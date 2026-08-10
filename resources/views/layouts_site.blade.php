@@ -28,8 +28,38 @@
                 <a href="/#become">सहायिका बनें</a>
             </nav>
             <div class="nav-actions">
+                @auth
+                @php
+                $user = auth()->user();
+
+                $dashboardRoute = match ($user->role ?? 'customer') {
+                'admin' => route('dashboard.index'),
+                'helper', 'sahayika' => route('dashboard.index'),
+                'customer' => route('dashboard.index'),
+                default => route('dashboard.index'),
+                };
+
+                $avatar = $user->avatar ?? $user->profile_image ?? null;
+                @endphp
+
+                <a href="{{ $dashboardRoute }}" class="user-profile">
+                    @if($avatar)
+                    <img src="{{ asset('storage/' . $avatar) }}"
+                        alt="{{ $user->name }}"
+                        class="user-avatar">
+                    @else
+                    <span class="user-avatar user-avatar-placeholder">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </span>
+                    @endif
+
+                    <span class="user-name">{{ $user->name }}</span>
+                </a>
+                @else
                 <a href="login" class="btn btn-ghost">लॉग इन</a>
                 <a href="register" class="btn btn-primary">रजिस्टर करें</a>
+                @endauth
+
             </div>
             <button class="menu-btn" onclick="document.getElementById('siteHeader').classList.toggle('open')" aria-label="Toggle menu">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none">

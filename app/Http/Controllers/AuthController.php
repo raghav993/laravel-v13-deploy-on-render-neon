@@ -117,7 +117,7 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
-        return redirect()->route('dashboard')->with('success', 'Welcome back to Sahayika.');
+        return redirect()->route('home')->with('success', 'Welcome back to Sahayika.');
     }
 
     public function logout(Request $request)

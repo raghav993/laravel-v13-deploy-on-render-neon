@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HelperProfile;
+use App\Models\ContactRequest;
 use App\Models\Locality;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -68,12 +69,18 @@ class HelperSearchController extends Controller
         abort_unless($helperProfile->profile_status === 'active', 404);
 
         $helperProfile->load([
-            'user:id,name,email,phone',
+            'user:id,name',
             'locality.city.state',
             'services.category',
             'availabilities' => fn($query) => $query->orderBy('day_of_week')->orderBy('start_time'),
         ]);
 
-        return view('helpers.show', compact('helperProfile'));
+        $contactRequest = auth()->check() && auth()->user()->isCustomer()
+            ? ContactRequest::where('customer_id', auth()->id())
+                ->where('helper_profile_id', $helperProfile->id)
+                ->first()
+            : null;
+
+        return view('helpers.show', compact('helperProfile', 'contactRequest'));
     }
 }
