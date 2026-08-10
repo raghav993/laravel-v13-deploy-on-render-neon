@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\HelperProfile;
 use App\Models\ContactRequest;
+use App\Models\Favorite;
+use App\Models\HelperProfile;
 use App\Models\Locality;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -77,10 +78,12 @@ class HelperSearchController extends Controller
 
         $contactRequest = auth()->check() && auth()->user()->isCustomer()
             ? ContactRequest::where('customer_id', auth()->id())
-                ->where('helper_profile_id', $helperProfile->id)
-                ->first()
+            ->where('helper_profile_id', $helperProfile->id)
+            ->first()
             : null;
-
-        return view('helpers.show', compact('helperProfile', 'contactRequest'));
+        $isFavorited = Favorite::where('customer_id', auth()->id())
+            ->where('helper_profile_id', $helperProfile->id)
+            ->exists();
+        return view('helpers.show', compact('helperProfile', 'contactRequest', 'isFavorited'));
     }
 }
