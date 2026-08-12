@@ -91,7 +91,7 @@ class DashboardController extends Controller
         if($r->filled('password')) {
             $r->validate(['password'=>'min:8|confirmed']); $u->update(['password'=>$r->password]);
         }
-        return back()->with('success','Profile updated successfully.');
+        return back()->with('success','आपका profile सफलतापूर्वक update हो गया है।');
     }
 
     public function photo(Request $r) {
@@ -100,7 +100,7 @@ class DashboardController extends Controller
         if($u->isHelper()){
             $p=$u->helperProfile; $p->profile_photo=$r->file('photo')->store('helpers','public'); $p->save();
         }
-        return back()->with('success','Photo updated.');
+        return back()->with('success','Profile photo सफलतापूर्वक update हो गई है।');
     }
 
     public function book(Request $r, HelperProfile $helper) {
@@ -108,7 +108,7 @@ class DashboardController extends Controller
         $data=$r->validate(['service_id'=>'required|exists:services,id','booking_date'=>'nullable|date|after_or_equal:today','start_time'=>'nullable','duration_hours'=>'nullable|integer|min:1|max:24','customer_note'=>'nullable|string|max:1000']);
         $data['customer_id']=auth()->id(); $data['helper_profile_id']=$helper->id; $data['status']='pending';
         Booking::create($data);
-        return back()->with('success','Booking request sent to the helper.');
+        return back()->with('success','Booking request सफलतापूर्वक भेज दी गई है। Helper के response का इंतजार करें।');
     }
 
     public function bookingStatus(Request $r, Booking $booking) {
@@ -116,24 +116,24 @@ class DashboardController extends Controller
         abort_unless($u->isAdmin() || $booking->customer_id===$u->id || $booking->helper?->user_id===$u->id,403);
         $r->validate(['status'=>'required|in:accepted,rejected,confirmed,completed,cancelled','helper_note'=>'nullable|string|max:1000','admin_note'=>'nullable|string|max:1000']);
         $booking->update($r->only(['status','helper_note','admin_note']));
-        return back()->with('success','Booking status updated.');
+        return back()->with('success','Booking status सफलतापूर्वक update हो गया है।');
     }
 
     public function favorite(HelperProfile $helper) {
         $this->role('customer');
         Favorite::firstOrCreate(['customer_id'=>auth()->id(),'helper_profile_id'=>$helper->id]);
-        return back()->with('success','Helper saved to favourites.');
+        return back()->with('success','Helper को favourites में save कर लिया गया है।');
     }
     public function unfavorite(HelperProfile $helper) {
         $this->role('customer'); Favorite::where(['customer_id'=>auth()->id(),'helper_profile_id'=>$helper->id])->delete();
-        return back()->with('success','Removed from favourites.');
+        return back()->with('success','Helper को favourites से हटा दिया गया है।');
     }
 
     public function remark(Request $r, HelperProfile $helper) {
         $this->role('customer');
         $d=$r->validate(['rating'=>'nullable|integer|min:1|max:5','remark'=>'required|string|max:2000','booking_id'=>'nullable|exists:bookings,id']);
         HelperRemark::create($d+['customer_id'=>auth()->id(),'helper_profile_id'=>$helper->id]);
-        return back()->with('success','Your remark has been added.');
+        return back()->with('success','आपका review/remark सफलतापूर्वक submit हो गया है।');
     }
 
     public function helperServices(Request $r) {
@@ -142,14 +142,14 @@ class DashboardController extends Controller
         $sync=[];
         foreach(($d['service_ids']??[]) as $id) $sync[$id]=['is_primary'=>(int)$id===(int)($d['primary_service']??0)];
         $p->services()->sync($sync);
-        return back()->with('success','Your services were updated.');
+        return back()->with('success','आपकी services सफलतापूर्वक update हो गई हैं।');
     }
 
     public function availability(Request $r) {
         $this->role('helper'); $p=auth()->user()->helperProfile;
         $d=$r->validate(['availability_status'=>'required|in:available,busy,unavailable','immediate_availability'=>'nullable']);
         $p->update(['availability_status'=>$d['availability_status'],'immediate_availability'=>$r->boolean('immediate_availability')]);
-        return back()->with('success','Availability updated.');
+        return back()->with('success','आपकी availability सफलतापूर्वक update हो गई है।');
     }
 
     // Admin
@@ -165,7 +165,7 @@ class DashboardController extends Controller
         $d=$r->validate(['name'=>'required|max:120','email'=>'required|email|unique:users,email,'.$user->id,'phone'=>'nullable|max:20|unique:users,phone,'.$user->id,'role'=>'required|in:customer,helper,admin','phone_verified'=>'nullable|boolean']);
         $d['phone_verified_at'] = $r->boolean('phone_verified') ? ($user->phone !== $d['phone'] ? null : ($user->phone_verified_at ?: now())) : null;
         unset($d['phone_verified']);
-        $user->update($d); return back()->with('success','User updated.');
+        $user->update($d); return back()->with('success','User details सफलतापूर्वक update हो गई हैं।');
     }
     public function services() {
         $this->role('admin'); $categories=ServiceCategory::with('services')->orderBy('sort_order')->get();
@@ -174,14 +174,14 @@ class DashboardController extends Controller
     public function serviceStore(Request $r) {
         $this->role('admin');
         $d=$r->validate(['service_category_id'=>'required|exists:service_categories,id','name'=>'required|max:120','name_hi'=>'nullable|max:120','slug'=>'required|max:150|unique:services,slug','description'=>'nullable|max:1000']);
-        Service::create($d+['is_active'=>$r->boolean('is_active',true)]); return back()->with('success','Service added.');
+        Service::create($d+['is_active'=>$r->boolean('is_active',true)]); return back()->with('success','नई service सफलतापूर्वक add हो गई है।');
     }
     public function serviceUpdate(Request $r, Service $service) {
         $this->role('admin');
         $d=$r->validate(['service_category_id'=>'required|exists:service_categories,id','name'=>'required|max:120','name_hi'=>'nullable|max:120','slug'=>'required|max:150|unique:services,slug,'.$service->id,'description'=>'nullable|max:1000']);
-        $service->update($d+['is_active'=>$r->boolean('is_active')]); return back()->with('success','Service updated.');
+        $service->update($d+['is_active'=>$r->boolean('is_active')]); return back()->with('success','Service सफलतापूर्वक update हो गई है।');
     }
-    public function serviceDelete(Service $service){$this->role('admin');$service->delete();return back()->with('success','Service removed.');}
+    public function serviceDelete(Service $service){$this->role('admin');$service->delete();return back()->with('success','Service सफलतापूर्वक remove कर दी गई है।');}
 
     public function testimonials() {
         $this->role('admin'); $testimonials=Testimonial::with('user')->latest()->paginate(12);
@@ -191,10 +191,10 @@ class DashboardController extends Controller
         $this->role('admin');
         $d=$r->validate(['name'=>'required|max:120','role_label'=>'nullable|max:120','message'=>'required|max:1000','rating'=>'required|integer|min:1|max:5','photo'=>'nullable|image|max:2048']);
         if($r->hasFile('photo')) $d['photo']=$r->file('photo')->store('testimonials','public');
-        Testimonial::create($d+['is_approved'=>$r->boolean('is_approved')]); return back()->with('success','Testimonial saved.');
+        Testimonial::create($d+['is_approved'=>$r->boolean('is_approved')]); return back()->with('success','Testimonial सफलतापूर्वक save हो गया है।');
     }
-    public function testimonialApprove(Testimonial $testimonial){$this->role('admin');$testimonial->update(['is_approved'=>!$testimonial->is_approved]);return back()->with('success','Testimonial status changed.');}
-    public function testimonialDelete(Testimonial $testimonial){$this->role('admin');$testimonial->delete();return back()->with('success','Testimonial deleted.');}
+    public function testimonialApprove(Testimonial $testimonial){$this->role('admin');$testimonial->update(['is_approved'=>!$testimonial->is_approved]);return back()->with('success','Testimonial approval status update हो गया है।');}
+    public function testimonialDelete(Testimonial $testimonial){$this->role('admin');$testimonial->delete();return back()->with('success','Testimonial सफलतापूर्वक delete कर दिया गया है।');}
 
     public function settings() {
         $this->role('admin'); $settings=SiteSetting::all()->keyBy('key'); return view('dashboard.admin.settings',compact('settings'));
@@ -204,7 +204,7 @@ class DashboardController extends Controller
         $d=$r->validate(['site_name'=>'nullable|max:120','tagline'=>'nullable|max:255','primary_color'=>'nullable|max:30','theme_mode'=>'nullable|in:light,dark,system','hero_title'=>'nullable|max:255','hero_text'=>'nullable|max:1000','logo'=>'nullable|image|max:2048','banner'=>'nullable|image|max:4096']);
         foreach(['site_name','tagline','primary_color','theme_mode','hero_title','hero_text'] as $key) if(array_key_exists($key,$d)) SiteSetting::set($key,$d[$key]??'');
         foreach(['logo','banner'] as $key) if($r->hasFile($key)) SiteSetting::set($key,$r->file($key)->store('site','public'),'image');
-        return back()->with('success','Site settings saved.');
+        return back()->with('success','Site settings सफलतापूर्वक save हो गई हैं।');
     }
     public function bookings(Request $r) {
         $this->role('admin'); $bookings=Booking::with(['customer','helper.user','service'])->latest()->paginate(15)->withQueryString();

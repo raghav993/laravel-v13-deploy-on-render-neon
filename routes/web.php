@@ -52,7 +52,6 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(functi
     Route::post('/contacts/{contactRequest}/report', [SecureContactController::class, 'report'])->name('contacts.report');
     Route::post('/contacts/{contactRequest}/call', [SecureContactController::class, 'call'])->name('contacts.call');
 
-
     Route::post('/bookings/{booking}/status', [DashboardController::class, 'bookingStatus'])->name('booking.status');
 
     Route::post('/helper/services', [DashboardController::class, 'helperServices'])->name('helper.services');

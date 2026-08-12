@@ -87,7 +87,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard')->with('success', 'Account created successfully.');
+        return redirect()->route('dashboard.index')->with('success', 'आपका Sahayika account सफलतापूर्वक बन गया है।');
     }
 
     public function showLogin()
@@ -113,11 +113,11 @@ class AuthController extends Controller
         ];
 
         if (!Auth::attempt($credentials, (bool) ($validated['remember'] ?? false))) {
-            return back()->withErrors(['identifier' => 'The login details do not match this account type.'])->withInput($request->only('identifier','role'));
+            return back()->withErrors(['identifier' => 'मोबाइल/email या password सही नहीं है। कृपया account type भी जांचें।'])->withInput($request->only('identifier','role'));
         }
 
         $request->session()->regenerate();
-        return redirect()->route('home')->with('success', 'Welcome back to Sahayika.');
+        return redirect()->route('home')->with('success', 'Sahayika में आपका स्वागत है। आप सफलतापूर्वक login हो गए हैं।');
     }
 
     public function logout(Request $request)
@@ -125,6 +125,6 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/')->with('success', 'You have been logged out.');
+        return redirect('/')->with('success', 'आप सुरक्षित रूप से logout हो गए हैं।');
     }
 }

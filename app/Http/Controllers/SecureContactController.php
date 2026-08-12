@@ -51,15 +51,15 @@ class SecureContactController extends Controller
             ->first();
 
         if ($existing?->status === 'blocked') {
-            return back()->withErrors(['contact' => 'You cannot contact this Sahayika.']);
+            return back()->withErrors(['contact' => 'आप इस Sahayika को contact नहीं कर सकते। संभव है कि contact restriction लागू हो।']);
         }
 
         if ($existing?->status === 'pending') {
-            return back()->with('success', 'Your contact request is already pending.');
+            return back()->with('success', 'आपका contact request पहले से pending है। कृपया response का इंतजार करें।');
         }
 
         if ($existing?->status === 'accepted' && !$existing->blocked_at) {
-            return back()->with('success', 'Contact is already active.');
+            return back()->with('success', 'यह contact पहले से active है। आप secure chat का उपयोग कर सकते हैं।');
         }
 
         $contactRequest = DB::transaction(function () use ($existing, $helper) {
@@ -82,7 +82,7 @@ class SecureContactController extends Controller
 
         $helper->user->notify(new ContactRequestNotification($contactRequest, 'request'));
 
-        return back()->with('success', 'Contact request sent to the Sahayika.');
+        return back()->with('success', 'Contact request सफलतापूर्वक भेज दी गई है। Sahayika के response का इंतजार करें।');
     }
 
     public function accept(ContactRequest $contactRequest)
@@ -104,7 +104,7 @@ class SecureContactController extends Controller
 
         $this->markNotificationRead($contactRequest->id, 'request');
 
-        return back()->with('success', 'Contact request accepted. Chat is now active.');
+        return back()->with('success', 'Contact request स्वीकार कर ली गई है। अब secure chat उपलब्ध है।');
     }
 
     public function deny(ContactRequest $contactRequest)
@@ -126,7 +126,7 @@ class SecureContactController extends Controller
 
         $this->markNotificationRead($contactRequest->id, 'request');
 
-        return back()->with('success', 'Contact request declined.');
+        return back()->with('success', 'Contact request decline कर दी गई है।');
     }
 
     public function chat(ContactRequest $contactRequest)
@@ -209,7 +209,7 @@ class SecureContactController extends Controller
         ]);
 
         return redirect()->route('dashboard.contacts.index')
-            ->with('success', 'This contact has been blocked.');
+            ->with('success', 'यह contact block कर दिया गया है। अब इस contact के माध्यम से communication बंद है।');
     }
 
     public function report(Request $request, ContactRequest $contactRequest)
@@ -240,7 +240,7 @@ class SecureContactController extends Controller
             $data + ['reported_user_id' => $reportedUserId]
         );
 
-        return back()->with('success', 'Report submitted securely.');
+        return back()->with('success', 'Report सुरक्षित रूप से submit हो गई है। हमारी team इसे review करेगी।');
     }
 
     public function call(ContactRequest $contactRequest, SecureCallService $callService)
@@ -254,7 +254,7 @@ class SecureContactController extends Controller
             return back()->withErrors(['call' => $e->getMessage()]);
         }
 
-        return back()->with('success', 'Call initiated. Your verified phone will be connected securely.');
+        return back()->with('success', 'Secure call request शुरू हो गई है। आपका verified phone सुरक्षित रूप से connect किया जाएगा.');
     }
 
     public function contacts()

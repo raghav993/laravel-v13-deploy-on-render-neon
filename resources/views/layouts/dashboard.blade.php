@@ -111,8 +111,10 @@ body{background:var(--page);color:#1e2b2a;overflow-x:hidden}
 </ul></div>
 </div></div></div>
 
-@if(session('success'))<div class="alert alert-success alert-dismissible fade show mt-3"><i class="bi bi-check-circle me-2"></i>{{ session('success') }}<button class="btn-close" data-bs-dismiss="alert"></button></div>@endif
-@if($errors->any())<div class="alert alert-danger mt-3"><ul class="mb-0">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>@endif
+@if(session('success'))<div class="alert alert-success alert-dismissible fade show mt-3" role="alert"><i class="bi bi-check-circle me-2"></i><strong>सफल:</strong> {{ session('success') }}<button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>@endif
+@if(session('warning'))<div class="alert alert-warning alert-dismissible fade show mt-3" role="alert"><i class="bi bi-exclamation-triangle me-2"></i><strong>ध्यान दें:</strong> {{ session('warning') }}<button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>@endif
+@if(session('info'))<div class="alert alert-info alert-dismissible fade show mt-3" role="alert"><i class="bi bi-info-circle me-2"></i>{{ session('info') }}<button class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>@endif
+@if($errors->any())<div class="alert alert-danger mt-3" role="alert"><i class="bi bi-exclamation-circle me-2"></i><strong>कृपया जानकारी जांचें:</strong><ul class="mb-0 mt-1">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>@endif
 <div class="pt-3">@yield('content')</div>
 </main>
 </div></div>
