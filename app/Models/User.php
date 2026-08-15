@@ -34,4 +34,7 @@ class User extends Authenticatable
     public function favorites(){ return $this->hasMany(Favorite::class,'customer_id'); }
     public function testimonials(){ return $this->hasMany(Testimonial::class); }
     public function remarks(){ return $this->hasMany(HelperRemark::class,'customer_id'); }
+    public function workerFavorites(){ return $this->hasMany(WorkerFavorite::class); }
+    public function recentWorkerViews(){ return $this->hasMany(WorkerRecentView::class); }
+    public function localWorkerBookings(){ return $this->hasMany(WorkerBooking::class, 'customer_user_id'); }
 }

@@ -53,5 +53,29 @@ php artisan serve
 - Password Hashing
 - Role-Based Authorization
 
+## Local Workers Marketplace
+
+The Local Workers module supports marketplace discovery for tradespeople and on-demand services: keyword, service, city, locality, experience, rate, availability, gender and sorting filters; enriched profile metadata (skills, languages, certifications, verification, rating, salary and working hours); saved workers; recent views; reports; similar-worker suggestions; and a date/time/address booking request with confirmation timeline.
+
+### Routes
+
+- `GET /local-workers` — discovery
+- `GET|POST /local-workers/register` — worker profile publishing
+- `GET|POST /local-workers/{localWorker}/book` — booking request
+- `GET /local-workers/{localWorker}/bookings/{booking}/confirmation` — request confirmation
+- `POST|DELETE /local-workers/{localWorker}/save` — authenticated shortlist
+
+### New database tables
+
+`worker_favorites`, `worker_recent_views`, and `worker_reports`. The `local_workers` table gains profile, trust, rating and working-hour fields through a backward-compatible migration.
+
+### User workflow
+
+Search → filter → review profile → save/share → submit booking details → confirmation → booking status updates.
+
+### Screenshot placeholders and roadmap
+
+Add listing, profile, booking, and confirmation screenshots here before release. Future work: reviews, real maps, availability calendar, notifications, and worker comparison.
+
 ## License
 MIT

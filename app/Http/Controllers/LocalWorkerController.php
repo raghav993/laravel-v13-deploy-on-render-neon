@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\LocalWorker;
+use App\Models\WorkerFavorite;
+use App\Models\WorkerRecentView;
+use App\Http\Requests\StoreLocalWorkerRequest;
+use App\Services\LocalWorkerMarketplaceService;
 use Illuminate\Http\Request;
 
 class LocalWorkerController extends Controller
@@ -20,11 +24,11 @@ class LocalWorkerController extends Controller
         'cook' => 'Cook',
     ];
 
-    public function index(Request $request)
+    public function index(Request $request, LocalWorkerMarketplaceService $marketplace)
     {
-        $query = LocalWorker::query();
+        $query = $marketplace->search($request);
 
-        if ($request->filled('q')) {
+        if (false && $request->filled('q')) {
             $q = trim($request->q);
             $query->where(function ($builder) use ($q) {
                 $builder->where('name', 'like', "%{$q}%")
@@ -34,26 +38,26 @@ class LocalWorkerController extends Controller
             });
         }
 
-        if ($request->filled('category') && array_key_exists($request->category, self::CATEGORIES)) {
+        if (false && $request->filled('category') && array_key_exists($request->category, self::CATEGORIES)) {
             $query->where('category', $request->category);
         }
 
-        if ($request->filled('city')) {
+        if (false && $request->filled('city')) {
             $query->where('city', 'like', '%'.trim($request->city).'%');
         }
 
-        if ($request->boolean('available')) {
+        if (false && $request->boolean('available')) {
             $query->where('availability_status', 'available');
         }
 
-        $workers = $query->orderByRaw("CASE WHEN availability_status = 'available' THEN 0 ELSE 1 END")
-            ->latest()
-            ->paginate(12)
+        $workers = $query->paginate(12)
             ->withQueryString();
 
         return view('local-workers.index', [
             'workers' => $workers,
             'categories' => self::CATEGORIES,
+            'cities' => LocalWorker::select('city')->distinct()->orderBy('city')->pluck('city'),
+            'areas' => LocalWorker::whereNotNull('area')->select('area')->distinct()->orderBy('area')->pluck('area'),
         ]);
     }
 
@@ -62,9 +66,9 @@ class LocalWorkerController extends Controller
         return view('local-workers.create', ['categories' => self::CATEGORIES]);
     }
 
-    public function store(Request $request)
+    public function store(StoreLocalWorkerRequest $request)
     {
-        $data = $request->validate([
+        $data = $request->validated(); /*
             'name' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'string', 'max:20'],
             'category' => ['required', 'in:'.implode(',', array_keys(self::CATEGORIES))],
@@ -75,7 +79,7 @@ class LocalWorkerController extends Controller
             'experience_years' => ['required', 'integer', 'min:0', 'max:60'],
             'service_type' => ['required', 'in:full_time,part_time,on_demand'],
             'hourly_rate' => ['nullable', 'numeric', 'min:0', 'max:999999'],
-        ]);
+        ]); */
 
         $data['skills'] = collect(explode(',', $data['skills'] ?? ''))
             ->map(fn ($skill) => trim($skill))
@@ -84,6 +88,7 @@ class LocalWorkerController extends Controller
             ->all();
 
         $data['availability_status'] = 'available';
+        foreach (['languages', 'certifications'] as $field) $data[$field] = collect(explode(',', $data[$field] ?? ''))->map(fn ($value) => trim($value))->filter()->values()->all();
         $data['avatar_color'] = collect(['#1d4ed8', '#0f766e', '#7c3aed', '#c2410c', '#be123c'])->random();
 
         if (auth()->check()) {
@@ -98,6 +103,12 @@ class LocalWorkerController extends Controller
 
     public function show(LocalWorker $localWorker)
     {
-        return view('local-workers.show', compact('localWorker'));
+        $isSaved = false;
+        if (auth()->check()) { WorkerRecentView::updateOrCreate(['user_id'=>auth()->id(),'local_worker_id'=>$localWorker->id]); $isSaved=WorkerFavorite::where(['user_id'=>auth()->id(),'local_worker_id'=>$localWorker->id])->exists(); }
+        $similarWorkers=LocalWorker::where('category',$localWorker->category)->where('city',$localWorker->city)->whereKeyNot($localWorker->id)->orderByDesc('rating')->latest()->take(3)->get();
+        return view('local-workers.show', compact('localWorker','similarWorkers','isSaved'));
     }
+    public function favorite(LocalWorker $localWorker) { WorkerFavorite::firstOrCreate(['user_id'=>auth()->id(),'local_worker_id'=>$localWorker->id]); return back()->with('success','Worker saved to your shortlist.'); }
+    public function unfavorite(LocalWorker $localWorker) { WorkerFavorite::where(['user_id'=>auth()->id(),'local_worker_id'=>$localWorker->id])->delete(); return back()->with('success','Worker removed from your shortlist.'); }
+    public function report(Request $request, LocalWorker $localWorker) { $data=$request->validate(['reason'=>'required|string|max:100','details'=>'nullable|string|max:1000']); \DB::table('worker_reports')->insert(['user_id'=>auth()->id(),'local_worker_id'=>$localWorker->id,'reason'=>$data['reason'],'details'=>$data['details']??null,'created_at'=>now(),'updated_at'=>now()]); return back()->with('success','Thank you. Our safety team will review this report.'); }
 }

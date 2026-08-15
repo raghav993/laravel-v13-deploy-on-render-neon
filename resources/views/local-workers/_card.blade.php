@@ -1,9 +1,10 @@
 <article class="worker-card">
     <div class="worker-card-head">
         <div class="avatar" style="--avatar: {{ $worker->avatar_color ?: '#1d4ed8' }}">{{ $worker->initials }}</div>
-        <div class="worker-main"><h3>{{ $worker->name }}</h3><p>{{ $worker->category_label }}</p></div>
+        <div class="worker-main"><h3>{{ $worker->name }}</h3><p>{{ $worker->category_label }}</p></div>@if($worker->is_verified)<span class="verified-badge">✓ Verified</span>@endif
         <span class="status-dot {{ $worker->availability_status }}">{{ $worker->availability_label }}</span>
     </div>
+    <div class="worker-rating">★ {{ $worker->rating > 0 ? number_format((float) $worker->rating, 1) : 'New' }} <span>{{ $worker->ratings_count ? '('.$worker->ratings_count.')' : '' }}</span></div>
     <div class="worker-meta">
         <span>⌖ {{ $worker->area ? $worker->area.', ' : '' }}{{ $worker->city }}</span>
         <span>◷ {{ $worker->experience_years }} {{ $worker->experience_years == 1 ? 'year' : 'years' }}</span>

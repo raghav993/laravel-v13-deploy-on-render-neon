@@ -31,6 +31,14 @@
                 @foreach(request()->except('available') as $key=>$value)<input type="hidden" name="{{ $key }}" value="{{ $value }}">@endforeach
             </form>
         </div>
+        <form class="market-filter-panel" method="GET" action="{{ route('workers.index') }}">
+            <input type="hidden" name="q" value="{{ request('q') }}"><input type="hidden" name="category" value="{{ request('category') }}">
+            <select name="city"><option value="">All cities</option>@foreach($cities as $city)<option value="{{ $city }}" @selected(request('city')===$city)>{{ $city }}</option>@endforeach</select>
+            <select name="area"><option value="">Any locality</option>@foreach($areas as $area)<option value="{{ $area }}" @selected(request('area')===$area)>{{ $area }}</option>@endforeach</select>
+            <select name="experience"><option value="">Any experience</option><option value="2">2+ years</option><option value="5">5+ years</option><option value="10">10+ years</option></select>
+            <input name="min_rate" type="number" min="0" placeholder="Min ₹/hr" value="{{ request('min_rate') }}"><input name="max_rate" type="number" min="0" placeholder="Max ₹/hr" value="{{ request('max_rate') }}">
+            <select name="gender"><option value="">Any gender</option><option value="female">Female</option><option value="male">Male</option></select><select name="sort"><option value="">Recommended</option><option value="rating">Highest rated</option><option value="experience">Most experienced</option><option value="newest">Newest</option></select><button class="btn btn-small">Apply filters</button>
+        </form>
         @if($workers->count())
             <div class="worker-grid">@foreach($workers as $worker) @include('local-workers._card', ['worker'=>$worker]) @endforeach</div>
             <div class="pagination">{{ $workers->links() }}</div>
